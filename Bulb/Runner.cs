@@ -7,4 +7,11 @@ public static class Runner
     public static Dictionary<string, int> Variables { get; } = [];
 
     public static Stack<object> Stack { get; } = [];
+
+    // this method is needed for resetting the state for each unit test
+    public static void Reset()
+    {
+        Variables.Clear();
+        Stack.Clear();
+    }
 }

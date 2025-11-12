@@ -8,6 +8,7 @@ public class Program : Node
 
     public override void Run()
     {
+        Runner.Reset();
         Statements.ForEach(s => s.Run());
     }
 

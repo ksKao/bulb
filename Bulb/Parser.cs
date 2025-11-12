@@ -2,17 +2,17 @@ using Bulb.Node;
 
 namespace Bulb;
 
-public static class Parser
+public class Parser
 {
-    private static Token[] s_tokens = [];
-    private static int s_i;
+    private int _i;
+    private Token[] _tokens = [];
 
-    private static Token CurrentToken => s_tokens[s_i];
-    private static bool IsEof => CurrentToken.Type == TokenType.Eof;
+    private Token CurrentToken => _tokens[_i];
+    private bool IsEof => CurrentToken.Type == TokenType.Eof;
 
-    public static Program Parse(Token[] tokens)
+    public Program Parse(Token[] tokens)
     {
-        s_tokens = tokens;
+        _tokens = tokens;
 
         Program program = new();
 
@@ -24,9 +24,9 @@ public static class Parser
         return program;
     }
 
-    private static Token Eat(TokenType? expectedType = null)
+    private Token Eat(TokenType? expectedType = null)
     {
-        if (s_tokens.Length == 0)
+        if (_tokens.Length == 0)
         {
             throw new Exception("No tokens found.");
         }
@@ -39,17 +39,17 @@ public static class Parser
         // need to cache first before increment otherwise the returned token will not be accurate
         Token cacheToken = CurrentToken;
 
-        s_i++;
+        _i++;
 
         return cacheToken;
     }
 
-    private static Node.Node ParseExpression()
+    private Node.Node ParseExpression()
     {
         return ParseAdditiveExpression();
     }
 
-    private static Node.Node ParseStatement()
+    private Node.Node ParseStatement()
     {
         return CurrentToken.Type switch
         {
@@ -59,7 +59,7 @@ public static class Parser
         };
     }
 
-    private static PrintStatement ParsePrintStatement()
+    private PrintStatement ParsePrintStatement()
     {
         Eat(TokenType.Print);
 
@@ -70,7 +70,7 @@ public static class Parser
         return printStatement;
     }
 
-    private static VariableDeclarationStatement ParseVariableDeclarationStatement()
+    private VariableDeclarationStatement ParseVariableDeclarationStatement()
     {
         Eat(TokenType.Let);
 
@@ -85,7 +85,7 @@ public static class Parser
         return variableDeclarationStatement;
     }
 
-    private static Node.Node ParseAdditiveExpression()
+    private Node.Node ParseAdditiveExpression()
     {
         Node.Node left = ParseMultiplicativeExpression();
 
@@ -99,7 +99,7 @@ public static class Parser
         return left;
     }
 
-    private static Node.Node ParseMultiplicativeExpression()
+    private Node.Node ParseMultiplicativeExpression()
     {
         Node.Node left = ParsePrimaryExpression();
 
@@ -113,7 +113,7 @@ public static class Parser
         return left;
     }
 
-    private static Node.Node ParsePrimaryExpression()
+    private Node.Node ParsePrimaryExpression()
     {
         return CurrentToken.Type switch
         {

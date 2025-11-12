@@ -17,9 +17,9 @@ internal static class App
 
             string fileContent = File.ReadAllText(filePath);
 
-            Token[] tokens = Lexer.Tokenize(fileContent);
+            Token[] tokens = new Lexer().Tokenize(fileContent);
 
-            Program program = Parser.Parse(tokens);
+            Program program = new Parser().Parse(tokens);
 
             program.Run();
         }

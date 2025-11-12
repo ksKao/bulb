@@ -1,21 +1,21 @@
 namespace Bulb;
 
-public static class Lexer
+public class Lexer
 {
-    private static readonly Token[] Keywords = [new(TokenType.Let, "let"), new(TokenType.Print, "print")];
+    private readonly Token[] _keywords = [new(TokenType.Let, "let"), new(TokenType.Print, "print")];
+    private int _i;
+    private int _lineNumber = 1;
 
-    private static string s_src = "";
-    private static int s_i;
-    private static int s_lineNumber = 1;
+    private string _src = "";
 
-    private static char CurrentChar => s_src.Length <= s_i ? '\0' : s_src[s_i];
-    private static char NextChar => s_src.Length <= s_i + 1 ? '\0' : s_src[s_i + 1];
+    private char CurrentChar => _src.Length <= _i ? '\0' : _src[_i];
+    private char NextChar => _src.Length <= _i + 1 ? '\0' : _src[_i + 1];
 
-    public static Token[] Tokenize(string src)
+    public Token[] Tokenize(string src)
     {
         List<Token> tokens = [];
-        s_i = 0;
-        s_src = src;
+        _i = 0;
+        _src = src;
 
         while (CurrentChar != '\0')
         {
@@ -37,27 +37,27 @@ public static class Lexer
             }
         }
 
-        tokens.Add(new Token(TokenType.Eof, "", s_lineNumber));
+        tokens.Add(new Token(TokenType.Eof, "", _lineNumber));
         return tokens.ToArray();
     }
 
-    private static void Advance()
+    private void Advance()
     {
         if (CurrentChar == '\n')
         {
-            s_lineNumber++;
+            _lineNumber++;
         }
 
-        s_i++;
+        _i++;
     }
 
-    private static bool GetIsValidWordChar(char c)
+    private bool GetIsValidWordChar(char c)
     {
         // only alphabets, numbers, and underscores are allowed to be in an identifier/keyword
         return char.IsLetterOrDigit(c) || c == '_';
     }
 
-    private static Token ParseNumber()
+    private Token ParseNumber()
     {
         string value = "";
 
@@ -67,10 +67,10 @@ public static class Lexer
             Advance();
         }
 
-        return new Token(TokenType.Number, value, s_lineNumber);
+        return new Token(TokenType.Number, value, _lineNumber);
     }
 
-    private static Token ParseWord()
+    private Token ParseWord()
     {
         string value = "";
 
@@ -80,52 +80,52 @@ public static class Lexer
 
             if (!GetIsValidWordChar(NextChar))
             {
-                Token? found = Keywords.FirstOrDefault(t => t.Value == value);
+                Token? found = _keywords.FirstOrDefault(t => t.Value == value);
 
                 if (found is not null)
                 {
                     Advance();
-                    return new Token(found.Type, found.Value, s_lineNumber);
+                    return new Token(found.Type, found.Value, _lineNumber);
                 }
 
                 // reaching this case means there are no matching keywords, i.e., the word is an identifier
                 Advance();
-                return new Token(TokenType.Identifier, value, s_lineNumber);
+                return new Token(TokenType.Identifier, value, _lineNumber);
             }
 
             // if no words are matched (e.g. we are in the middle of a keyword like 'le' for let, just continue to the next character
             Advance();
         }
 
-        throw new InvalidSyntaxException($"Invalid symbol encountered. `{value}`", s_lineNumber);
+        throw new InvalidSyntaxException($"Invalid symbol encountered. `{value}`", _lineNumber);
     }
 
-    private static Token ParseSymbol()
+    private Token ParseSymbol()
     {
         Token token;
 
         switch (CurrentChar)
         {
             case '=':
-                token = new Token(TokenType.Equals, "=", s_lineNumber);
+                token = new Token(TokenType.Equals, "=", _lineNumber);
                 break;
             case ';':
-                token = new Token(TokenType.Semicolon, ";", s_lineNumber);
+                token = new Token(TokenType.Semicolon, ";", _lineNumber);
                 break;
             case '+':
-                token = new Token(TokenType.Plus, "+", s_lineNumber);
+                token = new Token(TokenType.Plus, "+", _lineNumber);
                 break;
             case '-':
-                token = new Token(TokenType.Minus, "-", s_lineNumber);
+                token = new Token(TokenType.Minus, "-", _lineNumber);
                 break;
             case '*':
-                token = new Token(TokenType.Multiply, "*", s_lineNumber);
+                token = new Token(TokenType.Multiply, "*", _lineNumber);
                 break;
             case '/':
-                token = new Token(TokenType.Divide, "/", s_lineNumber);
+                token = new Token(TokenType.Divide, "/", _lineNumber);
                 break;
             default:
-                throw new InvalidSyntaxException($"Invalid symbol encountered. `{CurrentChar}`", s_lineNumber);
+                throw new InvalidSyntaxException($"Invalid symbol encountered. `{CurrentChar}`", _lineNumber);
         }
 
         Advance();
