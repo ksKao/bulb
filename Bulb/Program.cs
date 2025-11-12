@@ -7,13 +7,20 @@ internal static class Program
         try
         {
             if (args.Length == 0)
-                throw new ArgumentException("File path is reuiqred.");
-            
+            {
+                throw new ArgumentException("File path is required.");
+            }
+
             string filePath = args[0];
 
             string fileContent = File.ReadAllText(filePath);
-            
-            Console.WriteLine(fileContent);
+
+            Console.WriteLine(string.Join(", ", Lexer.Tokenize(fileContent).Select(t => t.ToString())));
+        }
+        catch (InvalidSyntaxException e)
+        {
+            Console.WriteLine($"Error at line {e.LineNumber}: {e.Message}");
+            Environment.Exit(1);
         }
         catch (Exception e)
         {
