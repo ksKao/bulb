@@ -12,5 +12,7 @@ public enum TokenType
     Minus,
     Multiply,
     Divide,
+    OpenParenthesis,
+    CloseParenthesis,
     Eof
 }

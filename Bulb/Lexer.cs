@@ -124,6 +124,12 @@ public class Lexer
             case '/':
                 token = new Token(TokenType.Divide, "/", _lineNumber);
                 break;
+            case '(':
+                token = new Token(TokenType.OpenParenthesis, "(", _lineNumber);
+                break;
+            case ')':
+                token = new Token(TokenType.CloseParenthesis, ")", _lineNumber);
+                break;
             default:
                 throw new InvalidSyntaxException($"Invalid symbol encountered. `{CurrentChar}`", _lineNumber);
         }

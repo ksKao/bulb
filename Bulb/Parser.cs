@@ -115,12 +115,19 @@ public class Parser
 
     private Node.Node ParsePrimaryExpression()
     {
-        return CurrentToken.Type switch
+        switch (CurrentToken.Type)
         {
-            TokenType.Number => new NumericLiteral(double.Parse(Eat(TokenType.Number).Value)),
-            TokenType.Identifier => new Identifier(Eat(TokenType.Identifier)),
-            _ => throw new InvalidSyntaxException($"Unexpected token `{CurrentToken.Value}`",
-                CurrentToken.LineNumber)
-        };
+            case TokenType.Number:
+                return new NumericLiteral(double.Parse(Eat(TokenType.Number).Value));
+            case TokenType.Identifier:
+                return new Identifier(Eat(TokenType.Identifier));
+            case TokenType.OpenParenthesis:
+                Eat(TokenType.OpenParenthesis);
+                Node.Node expression = ParseExpression();
+                Eat(TokenType.CloseParenthesis);
+                return expression;
+            default:
+                throw new InvalidSyntaxException($"Unexpected token `{CurrentToken.Value}`", CurrentToken.LineNumber);
+        }
     }
 }

@@ -81,4 +81,14 @@ public class MathTest
 
         Assert.Equal("-28.5\n", output);
     }
+
+    [Fact(DisplayName = "Operator Precedence With Parentheses")]
+    public void Operator_Precedence_With_Parentheses()
+    {
+        string output = Utils.RunCode("""
+                                      print 5 + 5 / (10 + 10);
+                                      """);
+
+        Assert.Equal("5.25\n", output);
+    }
 }
