@@ -1,6 +1,10 @@
-﻿namespace Bulb;
+﻿using System.Text.Json;
 
-internal static class Program
+using Bulb.Node;
+
+namespace Bulb;
+
+internal static class App
 {
     private static void Main(string[] args)
     {
@@ -15,7 +19,11 @@ internal static class Program
 
             string fileContent = File.ReadAllText(filePath);
 
-            Console.WriteLine(string.Join(", ", Lexer.Tokenize(fileContent).Select(t => t.ToString())));
+            Token[] tokens = Lexer.Tokenize(fileContent);
+
+            Program program = Parser.Parse(tokens);
+
+            Console.WriteLine(JsonSerializer.Serialize(program));
         }
         catch (InvalidSyntaxException e)
         {

@@ -37,6 +37,7 @@ public static class Lexer
             }
         }
 
+        tokens.Add(new Token(TokenType.Eof, "", s_lineNumber));
         return tokens.ToArray();
     }
 

@@ -6,5 +6,6 @@ public enum TokenType
     Let,
     Equals,
     Semicolon,
-    Number
+    Number,
+    Eof
 }
