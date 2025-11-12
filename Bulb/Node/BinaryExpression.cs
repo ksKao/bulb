@@ -6,27 +6,27 @@ public class BinaryExpression(Token operatorToken, Node left, Node right) : Node
     private Node Left { get; } = left;
     private Node Right { get; } = right;
 
-    public override void Run()
+    public override void Run(Runner runner)
     {
-        Left.Run();
-        Right.Run();
+        Left.Run(runner);
+        Right.Run(runner);
 
-        double rightValue = (double)Runner.Stack.Pop();
-        double leftValue = (double)Runner.Stack.Pop();
+        double rightValue = (double)runner.Stack.Pop();
+        double leftValue = (double)runner.Stack.Pop();
 
         switch (OperatorToken.Type)
         {
             case TokenType.Plus:
-                Runner.Stack.Push(leftValue + rightValue);
+                runner.Stack.Push(leftValue + rightValue);
                 break;
             case TokenType.Minus:
-                Runner.Stack.Push(leftValue - rightValue);
+                runner.Stack.Push(leftValue - rightValue);
                 break;
             case TokenType.Multiply:
-                Runner.Stack.Push(leftValue * rightValue);
+                runner.Stack.Push(leftValue * rightValue);
                 break;
             case TokenType.Divide:
-                Runner.Stack.Push(leftValue / rightValue);
+                runner.Stack.Push(leftValue / rightValue);
                 break;
             default:
                 throw new InvalidSyntaxException(

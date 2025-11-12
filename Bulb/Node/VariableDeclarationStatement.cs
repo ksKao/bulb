@@ -5,16 +5,16 @@ public class VariableDeclarationStatement(Token identifier, Node value) : Node
     private Token Identifier { get; } = identifier;
     private Node Value { get; } = value;
 
-    public override void Run()
+    public override void Run(Runner runner)
     {
-        if (Runner.Variables.ContainsKey(Identifier.Value))
+        if (runner.Variables.ContainsKey(Identifier.Value))
         {
             throw new InvalidSyntaxException($"Variable `{Identifier.Value}` already exists.", Identifier.LineNumber);
         }
 
-        Value.Run();
+        Value.Run(runner);
 
-        Runner.Variables[Identifier.Value] = Runner.Stack.Count - 1;
+        runner.Variables[Identifier.Value] = runner.Stack.Count - 1;
     }
 
     public override string ToString(string indent)

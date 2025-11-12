@@ -4,9 +4,9 @@ public class NumericLiteral(double value) : Node
 {
     private double Value { get; } = value;
 
-    public override void Run()
+    public override void Run(Runner runner)
     {
-        Runner.Stack.Push(Value);
+        runner.Stack.Push(Value);
     }
 
     public override string ToString(string indent)

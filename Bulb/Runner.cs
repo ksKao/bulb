@@ -1,17 +1,10 @@
 namespace Bulb;
 
-public static class Runner
+public class Runner
 {
     // key is the variable name, value is the index of the variable in stack
     // actually can directly store the actual value in the kv pair, but not doing so because of constant variable lookup time
-    public static Dictionary<string, int> Variables { get; } = [];
+    public Dictionary<string, int> Variables { get; } = [];
 
-    public static Stack<object> Stack { get; } = [];
-
-    // this method is needed for resetting the state for each unit test
-    public static void Reset()
-    {
-        Variables.Clear();
-        Stack.Clear();
-    }
+    public Stack<object> Stack { get; } = [];
 }

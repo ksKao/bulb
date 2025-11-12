@@ -1,33 +1,27 @@
+[assembly: CollectionBehavior(DisableTestParallelization = true)]
+
 namespace Test;
 
 public class PrintTest
 {
-    private readonly StringWriter _stringWriter = new();
-
-    public PrintTest()
-    {
-        Console.SetOut(_stringWriter);
-        _stringWriter.Flush();
-    }
-
-    [Fact]
+    [Fact(DisplayName = "Print Number")]
     public void Print_Number()
     {
-        Utils.RunCode("""
-                        print 5;
-                      """);
+        string output = Utils.RunCode("""
+                                        print 5;
+                                      """);
 
-        Assert.Equal("5\n", _stringWriter.ToString());
+        Assert.Equal("5\n", output);
     }
 
-    [Fact]
+    [Fact(DisplayName = "Print Variable")]
     public void Print_Variable()
     {
-        Utils.RunCode("""
-                        let x = 3;
-                        print x;
-                      """);
+        string output = Utils.RunCode("""
+                                        let x = 3;
+                                        print x;
+                                      """);
 
-        Assert.Equal("3\n", _stringWriter.ToString());
+        Assert.Equal("3\n", output);
     }
 }

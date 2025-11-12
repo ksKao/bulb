@@ -6,10 +6,9 @@ public class Program : Node
 {
     public List<Node> Statements { get; } = [];
 
-    public override void Run()
+    public override void Run(Runner runner)
     {
-        Runner.Reset();
-        Statements.ForEach(s => s.Run());
+        Statements.ForEach(s => s.Run(runner));
     }
 
     public override string ToString()

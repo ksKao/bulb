@@ -4,11 +4,11 @@ public class PrintStatement(Node value) : Node
 {
     private Node Value { get; } = value;
 
-    public override void Run()
+    public override void Run(Runner runner)
     {
-        Value.Run();
+        Value.Run(runner);
 
-        object value = Runner.Stack.Pop();
+        object value = runner.Stack.Pop();
 
         Console.WriteLine(value);
     }

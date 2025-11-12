@@ -21,7 +21,7 @@ internal static class App
 
             Program program = new Parser().Parse(tokens);
 
-            program.Run();
+            program.Run(new Runner());
         }
         catch (InvalidSyntaxException e)
         {
