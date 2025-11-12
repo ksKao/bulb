@@ -8,5 +8,9 @@ public enum TokenType
     Semicolon,
     Number,
     Print,
+    Plus,
+    Minus,
+    Multiply,
+    Divide,
     Eof
 }

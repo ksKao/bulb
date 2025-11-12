@@ -112,6 +112,18 @@ public static class Lexer
             case ';':
                 token = new Token(TokenType.Semicolon, ";", s_lineNumber);
                 break;
+            case '+':
+                token = new Token(TokenType.Plus, "+", s_lineNumber);
+                break;
+            case '-':
+                token = new Token(TokenType.Minus, "-", s_lineNumber);
+                break;
+            case '*':
+                token = new Token(TokenType.Multiply, "*", s_lineNumber);
+                break;
+            case '/':
+                token = new Token(TokenType.Divide, "/", s_lineNumber);
+                break;
             default:
                 throw new InvalidSyntaxException($"Invalid symbol encountered. `{CurrentChar}`", s_lineNumber);
         }

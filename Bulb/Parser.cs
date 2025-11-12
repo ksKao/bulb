@@ -46,7 +46,7 @@ public static class Parser
 
     private static Node.Node ParseExpression()
     {
-        return ParsePrimaryExpression();
+        return ParseAdditiveExpression();
     }
 
     private static Node.Node ParseStatement()
@@ -83,6 +83,34 @@ public static class Parser
         Eat(TokenType.Semicolon);
 
         return variableDeclarationStatement;
+    }
+
+    private static Node.Node ParseAdditiveExpression()
+    {
+        Node.Node left = ParseMultiplicativeExpression();
+
+        while (CurrentToken.Type == TokenType.Plus || CurrentToken.Type == TokenType.Minus)
+        {
+            Token operatorToken = Eat();
+
+            left = new BinaryExpression(operatorToken, left, ParseMultiplicativeExpression());
+        }
+
+        return left;
+    }
+
+    private static Node.Node ParseMultiplicativeExpression()
+    {
+        Node.Node left = ParsePrimaryExpression();
+
+        while (CurrentToken.Type == TokenType.Multiply || CurrentToken.Type == TokenType.Divide)
+        {
+            Token operatorToken = Eat();
+
+            left = new BinaryExpression(operatorToken, left, ParsePrimaryExpression());
+        }
+
+        return left;
     }
 
     private static Node.Node ParsePrimaryExpression()

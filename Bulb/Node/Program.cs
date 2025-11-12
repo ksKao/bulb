@@ -11,6 +11,11 @@ public class Program : Node
         Statements.ForEach(s => s.Run());
     }
 
+    public override string ToString()
+    {
+        return ToString("");
+    }
+
     public override string ToString(string indent)
     {
         StringBuilder sb = new();
