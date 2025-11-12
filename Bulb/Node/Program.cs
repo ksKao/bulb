@@ -6,6 +6,11 @@ public class Program : Node
 {
     public List<Node> Statements { get; } = [];
 
+    public override void Run()
+    {
+        Statements.ForEach(s => s.Run());
+    }
+
     public override string ToString(string indent)
     {
         StringBuilder sb = new();

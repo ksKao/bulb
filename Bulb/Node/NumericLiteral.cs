@@ -2,7 +2,12 @@ namespace Bulb.Node;
 
 public class NumericLiteral(double value) : Node
 {
-    public double Value { get; } = value;
+    private double Value { get; } = value;
+
+    public override void Run()
+    {
+        Runner.Stack.Push(Value);
+    }
 
     public override string ToString(string indent)
     {
