@@ -2,7 +2,7 @@ namespace Bulb;
 
 public static class Lexer
 {
-    private static readonly Token[] Keywords = [new(TokenType.Let, "let")];
+    private static readonly Token[] Keywords = [new(TokenType.Let, "let"), new(TokenType.Print, "print")];
 
     private static string s_src = "";
     private static int s_i;

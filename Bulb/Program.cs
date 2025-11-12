@@ -1,6 +1,4 @@
-﻿using System.Text.Json;
-
-using Bulb.Node;
+﻿using Bulb.Node;
 
 namespace Bulb;
 
@@ -23,7 +21,7 @@ internal static class App
 
             Program program = Parser.Parse(tokens);
 
-            Console.WriteLine(JsonSerializer.Serialize(program));
+            Console.WriteLine(program.ToString(""));
         }
         catch (InvalidSyntaxException e)
         {

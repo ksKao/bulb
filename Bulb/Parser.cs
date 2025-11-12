@@ -54,8 +54,20 @@ public static class Parser
         return CurrentToken.Type switch
         {
             TokenType.Let => ParseVariableDeclarationStatement(),
+            TokenType.Print => ParsePrintStatement(),
             _ => throw new InvalidSyntaxException($"Unexpected token {CurrentToken.Value}", CurrentToken.LineNumber)
         };
+    }
+
+    private static PrintStatement ParsePrintStatement()
+    {
+        Eat(TokenType.Print);
+
+        PrintStatement printStatement = new(ParseExpression());
+
+        Eat(TokenType.Semicolon);
+
+        return printStatement;
     }
 
     private static VariableDeclarationStatement ParseVariableDeclarationStatement()
@@ -78,7 +90,9 @@ public static class Parser
         return CurrentToken.Type switch
         {
             TokenType.Number => new NumericLiteral(double.Parse(Eat(TokenType.Number).Value)),
-            _ => throw new InvalidSyntaxException($"Unexpected token `{CurrentToken.Value}`", CurrentToken.LineNumber)
+            TokenType.Identifier => new Identifier(Eat(TokenType.Identifier)),
+            _ => throw new InvalidSyntaxException($"Unexpected token `{CurrentToken.Value}`",
+                CurrentToken.LineNumber)
         };
     }
 }

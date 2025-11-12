@@ -7,5 +7,6 @@ public enum TokenType
     Equals,
     Semicolon,
     Number,
+    Print,
     Eof
 }
