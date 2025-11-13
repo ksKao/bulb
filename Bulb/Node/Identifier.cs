@@ -1,3 +1,5 @@
+using Bulb.Enums;
+
 namespace Bulb.Node;
 
 public class Identifier(Token identifierToken) : Expression

@@ -1,3 +1,5 @@
+using Bulb.Enums;
+
 namespace Bulb.Node;
 
 public class BinaryExpression(Token operatorToken, Expression left, Expression right) : Expression
@@ -56,8 +58,14 @@ public class BinaryExpression(Token operatorToken, Expression left, Expression r
     {
         if (Left.DataType != Right.DataType)
         {
-            throw new InvalidSyntaxException($"Unable to `{operatorToken.Value}` {Left.DataType} and {Right.DataType}",
-                operatorToken.LineNumber);
+            throw new InvalidSyntaxException($"Unable to `{OperatorToken.Value}` {Left.DataType} and {Right.DataType}",
+                OperatorToken.LineNumber);
+        }
+
+        if (Left.DataType != DataType.Number)
+        {
+            throw new InvalidSyntaxException($"Unable to `{OperatorToken.Value}` {Left.DataType} and {Right.DataType}",
+                OperatorToken.LineNumber);
         }
     }
 

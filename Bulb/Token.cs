@@ -1,3 +1,5 @@
+using Bulb.Enums;
+
 namespace Bulb;
 
 public class Token(TokenType type, string value, int lineNumber = 0)

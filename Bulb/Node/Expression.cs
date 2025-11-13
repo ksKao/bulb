@@ -1,3 +1,5 @@
+using Bulb.Enums;
+
 namespace Bulb.Node;
 
 public abstract class Expression : Node

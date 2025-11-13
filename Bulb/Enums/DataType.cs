@@ -1,6 +1,7 @@
-namespace Bulb;
+namespace Bulb.Enums;
 
 public enum DataType
 {
-    Number
+    Number,
+    Boolean
 }

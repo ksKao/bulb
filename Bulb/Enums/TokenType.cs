@@ -1,4 +1,4 @@
-namespace Bulb;
+namespace Bulb.Enums;
 
 public enum TokenType
 {
@@ -16,5 +16,7 @@ public enum TokenType
     CloseParenthesis,
     OpenCurly,
     CloseCurly,
+    True,
+    False,
     Eof
 }

@@ -2,11 +2,11 @@ using Bulb.Enums;
 
 namespace Bulb.Node;
 
-public class NumericLiteral(double value) : Expression
+public class BooleanLiteral(bool value) : Expression
 {
-    private double Value { get; } = value;
+    private bool Value { get; } = value;
 
-    public override DataType DataType { get; protected set; } = DataType.Number;
+    public override DataType DataType { get; protected set; } = DataType.Boolean;
 
     public override void Run(Runner runner)
     {

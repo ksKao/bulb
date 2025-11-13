@@ -1,8 +1,15 @@
+using Bulb.Enums;
+
 namespace Bulb;
 
 public class Lexer
 {
-    private readonly Token[] _keywords = [new(TokenType.Let, "let"), new(TokenType.Print, "print")];
+    private readonly Token[] _keywords =
+    [
+        new(TokenType.Let, "let"), new(TokenType.Print, "print"), new(TokenType.True, "true"),
+        new(TokenType.False, "false")
+    ];
+
     private int _i;
     private int _lineNumber = 1;
 

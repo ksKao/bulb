@@ -1,8 +1,10 @@
+using Bulb.Enums;
+
 namespace Bulb.Node;
 
-public class PrintStatement(Node value) : Node
+public class PrintStatement(Expression value) : Node
 {
-    private Node Value { get; } = value;
+    private Expression Value { get; } = value;
 
     public override void Run(Runner runner)
     {
@@ -10,7 +12,14 @@ public class PrintStatement(Node value) : Node
 
         object value = runner.Stack.Pop();
 
-        Console.WriteLine(value);
+        if (Value.DataType == DataType.Boolean)
+        {
+            Console.WriteLine(((bool)value).ToString().ToLower());
+        }
+        else
+        {
+            Console.WriteLine(value);
+        }
     }
 
     public override string ToString(string indent)

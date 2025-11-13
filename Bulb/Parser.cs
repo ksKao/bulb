@@ -1,3 +1,4 @@
+using Bulb.Enums;
 using Bulb.Node;
 
 namespace Bulb;
@@ -157,6 +158,12 @@ public class Parser
                 Expression expression = ParseExpression();
                 Eat(TokenType.CloseParenthesis);
                 return expression;
+            case TokenType.True:
+                Eat(TokenType.True);
+                return new BooleanLiteral(true);
+            case TokenType.False:
+                Eat(TokenType.False);
+                return new BooleanLiteral(false);
             default:
                 throw new InvalidSyntaxException($"Unexpected token `{CurrentToken.Value}`", CurrentToken.LineNumber);
         }
