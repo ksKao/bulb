@@ -56,6 +56,7 @@ public class Parser
             TokenType.Let => ParseVariableDeclarationStatement(),
             TokenType.Print => ParsePrintStatement(),
             TokenType.OpenCurly => ParseScope(),
+            TokenType.Identifier => ParseAssignmentStatement(),
             _ => throw new InvalidSyntaxException($"Unexpected token {CurrentToken.Value}", CurrentToken.LineNumber)
         };
     }
@@ -84,6 +85,19 @@ public class Parser
         Eat(TokenType.Semicolon);
 
         return variableDeclarationStatement;
+    }
+
+    private AssignmentStatement ParseAssignmentStatement()
+    {
+        Token identifier = Eat(TokenType.Identifier);
+
+        Eat(TokenType.Equals);
+
+        AssignmentStatement assignmentStatement = new(identifier, ParseExpression());
+
+        Eat(TokenType.Semicolon);
+
+        return assignmentStatement;
     }
 
     private Scope ParseScope()

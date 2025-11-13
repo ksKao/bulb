@@ -17,16 +17,16 @@ public class BinaryExpression(Token operatorToken, Node left, Node right) : Node
         switch (OperatorToken.Type)
         {
             case TokenType.Plus:
-                runner.Stack.Push(leftValue + rightValue);
+                runner.Stack.Add(leftValue + rightValue);
                 break;
             case TokenType.Minus:
-                runner.Stack.Push(leftValue - rightValue);
+                runner.Stack.Add(leftValue - rightValue);
                 break;
             case TokenType.Multiply:
-                runner.Stack.Push(leftValue * rightValue);
+                runner.Stack.Add(leftValue * rightValue);
                 break;
             case TokenType.Divide:
-                runner.Stack.Push(leftValue / rightValue);
+                runner.Stack.Add(leftValue / rightValue);
                 break;
             default:
                 throw new InvalidSyntaxException(

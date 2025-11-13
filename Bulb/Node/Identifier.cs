@@ -12,7 +12,7 @@ public class Identifier(Token identifierToken) : Node
                 IdentifierToken.LineNumber);
         }
 
-        runner.Stack.Push(runner.Stack.ElementAt(variable.StackLocation));
+        runner.Stack.Add(runner.Stack.ElementAt(variable.StackLocation));
     }
 
     public override string ToString(string indent)

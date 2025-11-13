@@ -4,7 +4,8 @@ public class Runner
 {
     public List<Variable> Variables { get; } = [];
 
-    public Stack<object> Stack { get; } = [];
+    // cant use the actual Stack class here because we need to modify the elements in the middle for assignment statement
+    public List<object> Stack { get; } = [];
 
     /*
      * {

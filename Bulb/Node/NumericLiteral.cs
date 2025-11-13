@@ -6,7 +6,7 @@ public class NumericLiteral(double value) : Node
 
     public override void Run(Runner runner)
     {
-        runner.Stack.Push(Value);
+        runner.Stack.Add(Value);
     }
 
     public override string ToString(string indent)
