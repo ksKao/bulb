@@ -6,13 +6,13 @@ public class Identifier(Token identifierToken) : Node
 
     public override void Run(Runner runner)
     {
-        if (!runner.Variables.TryGetValue(IdentifierToken.Value, out int stackIndex))
+        if (!runner.TryGetVariable(IdentifierToken.Value, out Variable variable))
         {
             throw new InvalidSyntaxException($"Identifier '{IdentifierToken.Value}' does not exist.",
                 IdentifierToken.LineNumber);
         }
 
-        runner.Stack.Push(runner.Stack.ElementAt(stackIndex));
+        runner.Stack.Push(runner.Stack.ElementAt(variable.StackLocation));
     }
 
     public override string ToString(string indent)

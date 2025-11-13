@@ -2,9 +2,9 @@ namespace Bulb;
 
 public class Token(TokenType type, string value, int lineNumber = 0)
 {
-    public TokenType Type { get; init; } = type;
-    public string Value { get; init; } = value;
-    public int LineNumber { get; init; } = lineNumber;
+    public TokenType Type { get; } = type;
+    public string Value { get; } = value;
+    public int LineNumber { get; } = lineNumber;
 
     public override string ToString()
     {

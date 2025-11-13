@@ -14,5 +14,7 @@ public enum TokenType
     Divide,
     OpenParenthesis,
     CloseParenthesis,
+    OpenCurly,
+    CloseCurly,
     Eof
 }

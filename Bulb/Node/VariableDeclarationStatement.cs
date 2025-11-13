@@ -7,14 +7,14 @@ public class VariableDeclarationStatement(Token identifier, Node value) : Node
 
     public override void Run(Runner runner)
     {
-        if (runner.Variables.ContainsKey(Identifier.Value))
+        if (runner.TryGetVariable(Identifier.Value, out _))
         {
             throw new InvalidSyntaxException($"Variable `{Identifier.Value}` already exists.", Identifier.LineNumber);
         }
 
         Value.Run(runner);
 
-        runner.Variables[Identifier.Value] = runner.Stack.Count - 1;
+        runner.Variables.Add(new Variable(Identifier.Value, runner.Stack.Count - 1));
     }
 
     public override string ToString(string indent)

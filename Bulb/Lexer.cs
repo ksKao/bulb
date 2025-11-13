@@ -130,6 +130,12 @@ public class Lexer
             case ')':
                 token = new Token(TokenType.CloseParenthesis, ")", _lineNumber);
                 break;
+            case '{':
+                token = new Token(TokenType.OpenCurly, "{", _lineNumber);
+                break;
+            case '}':
+                token = new Token(TokenType.CloseCurly, "}", _lineNumber);
+                break;
             default:
                 throw new InvalidSyntaxException($"Invalid symbol encountered. `{CurrentChar}`", _lineNumber);
         }
