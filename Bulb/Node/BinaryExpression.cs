@@ -13,6 +13,9 @@ public class BinaryExpression(Token operatorToken, Expression left, Expression r
     private bool IsMathOperator =>
         OperatorToken.Type is TokenType.Plus or TokenType.Minus or TokenType.Multiply or TokenType.Divide;
 
+    private bool IsComparisonOperator => OperatorToken.Type is TokenType.DoubleEqual or TokenType.NotEqual
+        or TokenType.GreaterThan or TokenType.GreaterThanOrEqual or TokenType.LessThan or TokenType.LessThanOrEqual;
+
     public override DataType DataType { get; protected set; }
 
     public override void Run(Runner runner)
@@ -70,6 +73,57 @@ public class BinaryExpression(Token operatorToken, Expression left, Expression r
                         OperatorToken.LineNumber);
             }
         }
+        else if (IsComparisonOperator)
+        {
+            // for comparison operator, handle for equalities differently (because they should work for all data types)
+            DataType = DataType.Boolean;
+
+            if (OperatorToken.Type is TokenType.DoubleEqual or TokenType.NotEqual)
+            {
+                object rightValue = runner.Stack.Pop();
+                object leftValue = runner.Stack.Pop();
+
+                switch (OperatorToken.Type)
+                {
+                    case TokenType.DoubleEqual:
+                        // use .Equals here because of boxed value will compare by reference (https://stackoverflow.com/questions/814878/c-sharp-difference-between-and-equals)
+                        runner.Stack.Add(leftValue.Equals(rightValue));
+                        break;
+                    case TokenType.NotEqual:
+                        runner.Stack.Add(!leftValue.Equals(rightValue));
+                        break;
+                    default:
+                        throw new InvalidSyntaxException(
+                            $"Unexpected operator encountered in binary expression: `{OperatorToken.Value}`",
+                            OperatorToken.LineNumber);
+                }
+            }
+            else
+            {
+                double rightValue = (double)runner.Stack.Pop();
+                double leftValue = (double)runner.Stack.Pop();
+
+                switch (OperatorToken.Type)
+                {
+                    case TokenType.GreaterThanOrEqual:
+                        runner.Stack.Add(leftValue >= rightValue);
+                        break;
+                    case TokenType.GreaterThan:
+                        runner.Stack.Add(leftValue > rightValue);
+                        break;
+                    case TokenType.LessThanOrEqual:
+                        runner.Stack.Add(leftValue <= rightValue);
+                        break;
+                    case TokenType.LessThan:
+                        runner.Stack.Add(leftValue < rightValue);
+                        break;
+                    default:
+                        throw new InvalidSyntaxException(
+                            $"Unexpected operator encountered in binary expression: `{OperatorToken.Value}`",
+                            OperatorToken.LineNumber);
+                }
+            }
+        }
         else
         {
             throw new InvalidSyntaxException($"Unknown binary operator encountered (`{OperatorToken.Value}`)",
@@ -98,21 +152,16 @@ public class BinaryExpression(Token operatorToken, Expression left, Expression r
         }
 
         // from here on assume and left and right is the same, so we only check for the left data type
-        if (Left.DataType == DataType.Number && !IsMathOperator)
+        if (Left.DataType == DataType.Number && !IsMathOperator && !IsComparisonOperator)
         {
             throw new InvalidSyntaxException($"Unable to `{OperatorToken.Value}` {Left.DataType} and {Right.DataType}",
                 OperatorToken.LineNumber);
         }
 
-        if (Left.DataType == DataType.Boolean && !IsBooleanOperator)
+        if (Left.DataType == DataType.Boolean && !IsBooleanOperator && !IsComparisonOperator)
         {
             throw new InvalidSyntaxException($"Unable to `{OperatorToken.Value}` {Left.DataType} and {Right.DataType}",
                 OperatorToken.LineNumber);
         }
-    }
-
-    private void AssignDataType()
-    {
-        DataType = DataType.Number;
     }
 }

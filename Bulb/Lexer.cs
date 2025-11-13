@@ -114,6 +114,13 @@ public class Lexer
         switch (CurrentChar)
         {
             case '=':
+                if (NextChar == '=')
+                {
+                    Advance();
+                    token = new Token(TokenType.DoubleEqual, "==", _lineNumber);
+                    break;
+                }
+
                 token = new Token(TokenType.Equals, "=", _lineNumber);
                 break;
             case ';':
@@ -144,6 +151,13 @@ public class Lexer
                 token = new Token(TokenType.CloseCurly, "}", _lineNumber);
                 break;
             case '!':
+                if (NextChar == '=')
+                {
+                    Advance();
+                    token = new Token(TokenType.NotEqual, "!=", _lineNumber);
+                    break;
+                }
+
                 token = new Token(TokenType.Not, "!", _lineNumber);
                 break;
             case '|':
@@ -164,6 +178,26 @@ public class Lexer
                 }
 
                 throw new InvalidSyntaxException($"Invalid symbol encountered. `{CurrentChar}`", _lineNumber);
+            case '>':
+                if (NextChar == '=')
+                {
+                    Advance();
+                    token = new Token(TokenType.GreaterThanOrEqual, ">=", _lineNumber);
+                    break;
+                }
+
+                token = new Token(TokenType.GreaterThan, ">", _lineNumber);
+                break;
+            case '<':
+                if (NextChar == '=')
+                {
+                    Advance();
+                    token = new Token(TokenType.LessThanOrEqual, "<=", _lineNumber);
+                    break;
+                }
+
+                token = new Token(TokenType.LessThan, "<", _lineNumber);
+                break;
             default:
                 throw new InvalidSyntaxException($"Invalid symbol encountered. `{CurrentChar}`", _lineNumber);
         }

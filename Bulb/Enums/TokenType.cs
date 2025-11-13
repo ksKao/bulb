@@ -21,5 +21,11 @@ public enum TokenType
     And,
     Or,
     Not,
+    DoubleEqual,
+    NotEqual,
+    GreaterThan,
+    GreaterThanOrEqual,
+    LessThan,
+    LessThanOrEqual,
     Eof
 }

@@ -47,7 +47,7 @@ public class Parser
 
     private Expression ParseExpression()
     {
-        return ParseAdditiveExpression();
+        return ParseComparisonExpression();
     }
 
     private Node.Node ParseStatement()
@@ -115,6 +115,21 @@ public class Parser
         Eat(TokenType.CloseCurly);
 
         return scope;
+    }
+
+    private Expression ParseComparisonExpression()
+    {
+        Expression left = ParseAdditiveExpression();
+
+        while (CurrentToken.Type is TokenType.DoubleEqual or TokenType.NotEqual or TokenType.GreaterThan
+               or TokenType.GreaterThanOrEqual or TokenType.LessThan or TokenType.LessThanOrEqual)
+        {
+            Token operatorToken = Eat();
+
+            left = new BinaryExpression(operatorToken, left, ParseAdditiveExpression());
+        }
+
+        return left;
     }
 
     private Expression ParseAdditiveExpression()
