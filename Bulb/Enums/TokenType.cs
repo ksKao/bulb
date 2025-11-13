@@ -18,5 +18,8 @@ public enum TokenType
     CloseCurly,
     True,
     False,
+    And,
+    Or,
+    Not,
     Eof
 }

@@ -143,6 +143,27 @@ public class Lexer
             case '}':
                 token = new Token(TokenType.CloseCurly, "}", _lineNumber);
                 break;
+            case '!':
+                token = new Token(TokenType.Not, "!", _lineNumber);
+                break;
+            case '|':
+                if (NextChar == '|')
+                {
+                    Advance();
+                    token = new Token(TokenType.Or, "||", _lineNumber);
+                    break;
+                }
+
+                throw new InvalidSyntaxException($"Invalid symbol encountered. `{CurrentChar}`", _lineNumber);
+            case '&':
+                if (NextChar == '&')
+                {
+                    Advance();
+                    token = new Token(TokenType.And, "&&", _lineNumber);
+                    break;
+                }
+
+                throw new InvalidSyntaxException($"Invalid symbol encountered. `{CurrentChar}`", _lineNumber);
             default:
                 throw new InvalidSyntaxException($"Invalid symbol encountered. `{CurrentChar}`", _lineNumber);
         }

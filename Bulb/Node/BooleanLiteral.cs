@@ -15,6 +15,6 @@ public class BooleanLiteral(bool value) : Expression
 
     public override string ToString(string indent)
     {
-        return indent + Value;
+        return indent + Value.ToString().ToLower();
     }
 }

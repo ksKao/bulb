@@ -121,7 +121,7 @@ public class Parser
     {
         Expression left = ParseMultiplicativeExpression();
 
-        while (CurrentToken.Type is TokenType.Plus or TokenType.Minus)
+        while (CurrentToken.Type is TokenType.Plus or TokenType.Minus or TokenType.Or)
         {
             Token operatorToken = Eat();
 
@@ -133,16 +133,32 @@ public class Parser
 
     private Expression ParseMultiplicativeExpression()
     {
-        Expression left = ParsePrimaryExpression();
+        Expression left = ParsePrefixExpression();
 
-        while (CurrentToken.Type is TokenType.Multiply or TokenType.Divide)
+        while (CurrentToken.Type is TokenType.Multiply or TokenType.Divide or TokenType.And)
         {
             Token operatorToken = Eat();
 
-            left = new BinaryExpression(operatorToken, left, ParsePrimaryExpression());
+            left = new BinaryExpression(operatorToken, left, ParsePrefixExpression());
         }
 
         return left;
+    }
+
+    private Expression ParsePrefixExpression()
+    {
+        while (CurrentToken.Type is TokenType.Not)
+        {
+            switch (CurrentToken.Type)
+            {
+                case TokenType.Not:
+                    Token operatorToken = Eat();
+                    PrefixExpression prefixExpression = new(operatorToken, ParsePrefixExpression());
+                    return prefixExpression;
+            }
+        }
+
+        return ParsePrimaryExpression();
     }
 
     private Expression ParsePrimaryExpression()
