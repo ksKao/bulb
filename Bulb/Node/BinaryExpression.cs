@@ -1,15 +1,20 @@
 namespace Bulb.Node;
 
-public class BinaryExpression(Token operatorToken, Node left, Node right) : Node
+public class BinaryExpression(Token operatorToken, Expression left, Expression right) : Expression
 {
     private Token OperatorToken { get; } = operatorToken;
-    private Node Left { get; } = left;
-    private Node Right { get; } = right;
+    private Expression Left { get; } = left;
+    private Expression Right { get; } = right;
+
+    public override DataType DataType { get; protected set; }
 
     public override void Run(Runner runner)
     {
         Left.Run(runner);
         Right.Run(runner);
+
+        ValidateType();
+        AssignDataType();
 
         double rightValue = (double)runner.Stack.Pop();
         double leftValue = (double)runner.Stack.Pop();
@@ -45,5 +50,19 @@ public class BinaryExpression(Token operatorToken, Node left, Node right) : Node
                 {indent + "\t"} Right:
                 {Right.ToString(indent + "\t\t")}
                 """;
+    }
+
+    private void ValidateType()
+    {
+        if (Left.DataType != Right.DataType)
+        {
+            throw new InvalidSyntaxException($"Unable to `{operatorToken.Value}` {Left.DataType} and {Right.DataType}",
+                operatorToken.LineNumber);
+        }
+    }
+
+    private void AssignDataType()
+    {
+        DataType = DataType.Number;
     }
 }

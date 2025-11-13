@@ -1,3 +1,3 @@
 namespace Bulb;
 
-public record Variable(string Name, int StackLocation);
+public record Variable(string Name, int StackLocation, DataType DataType);

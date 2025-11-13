@@ -1,8 +1,10 @@
 namespace Bulb.Node;
 
-public class Identifier(Token identifierToken) : Node
+public class Identifier(Token identifierToken) : Expression
 {
     private Token IdentifierToken { get; } = identifierToken;
+
+    public override DataType DataType { get; protected set; }
 
     public override void Run(Runner runner)
     {
@@ -12,6 +14,7 @@ public class Identifier(Token identifierToken) : Node
                 IdentifierToken.LineNumber);
         }
 
+        DataType = variable.DataType;
         runner.Stack.Add(runner.Stack.ElementAt(variable.StackLocation));
     }
 

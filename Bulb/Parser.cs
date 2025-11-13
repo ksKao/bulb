@@ -44,7 +44,7 @@ public class Parser
         return cacheToken;
     }
 
-    private Node.Node ParseExpression()
+    private Expression ParseExpression()
     {
         return ParseAdditiveExpression();
     }
@@ -116,11 +116,11 @@ public class Parser
         return scope;
     }
 
-    private Node.Node ParseAdditiveExpression()
+    private Expression ParseAdditiveExpression()
     {
-        Node.Node left = ParseMultiplicativeExpression();
+        Expression left = ParseMultiplicativeExpression();
 
-        while (CurrentToken.Type == TokenType.Plus || CurrentToken.Type == TokenType.Minus)
+        while (CurrentToken.Type is TokenType.Plus or TokenType.Minus)
         {
             Token operatorToken = Eat();
 
@@ -130,11 +130,11 @@ public class Parser
         return left;
     }
 
-    private Node.Node ParseMultiplicativeExpression()
+    private Expression ParseMultiplicativeExpression()
     {
-        Node.Node left = ParsePrimaryExpression();
+        Expression left = ParsePrimaryExpression();
 
-        while (CurrentToken.Type == TokenType.Multiply || CurrentToken.Type == TokenType.Divide)
+        while (CurrentToken.Type is TokenType.Multiply or TokenType.Divide)
         {
             Token operatorToken = Eat();
 
@@ -144,7 +144,7 @@ public class Parser
         return left;
     }
 
-    private Node.Node ParsePrimaryExpression()
+    private Expression ParsePrimaryExpression()
     {
         switch (CurrentToken.Type)
         {
@@ -154,7 +154,7 @@ public class Parser
                 return new Identifier(Eat(TokenType.Identifier));
             case TokenType.OpenParenthesis:
                 Eat(TokenType.OpenParenthesis);
-                Node.Node expression = ParseExpression();
+                Expression expression = ParseExpression();
                 Eat(TokenType.CloseParenthesis);
                 return expression;
             default:

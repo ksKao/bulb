@@ -1,9 +1,9 @@
 namespace Bulb.Node;
 
-public class VariableDeclarationStatement(Token identifier, Node value) : Node
+public class VariableDeclarationStatement(Token identifier, Expression value) : Node
 {
     private Token Identifier { get; } = identifier;
-    private Node Value { get; } = value;
+    private Expression Value { get; } = value;
 
     public override void Run(Runner runner)
     {
@@ -14,7 +14,7 @@ public class VariableDeclarationStatement(Token identifier, Node value) : Node
 
         Value.Run(runner);
 
-        runner.Variables.Add(new Variable(Identifier.Value, runner.Stack.Count - 1));
+        runner.Variables.Add(new Variable(Identifier.Value, runner.Stack.Count - 1, Value.DataType));
     }
 
     public override string ToString(string indent)

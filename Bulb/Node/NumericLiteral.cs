@@ -1,8 +1,10 @@
 namespace Bulb.Node;
 
-public class NumericLiteral(double value) : Node
+public class NumericLiteral(double value) : Expression
 {
     private double Value { get; } = value;
+
+    public override DataType DataType { get; protected set; } = DataType.Number;
 
     public override void Run(Runner runner)
     {

@@ -1,9 +1,9 @@
 namespace Bulb.Node;
 
-public class AssignmentStatement(Token identifierToken, Node value) : Node
+public class AssignmentStatement(Token identifierToken, Expression value) : Node
 {
     private Token Identifier { get; } = identifierToken;
-    private Node Value { get; } = value;
+    private Expression Value { get; } = value;
 
 
     public override void Run(Runner runner)
@@ -14,6 +14,12 @@ public class AssignmentStatement(Token identifierToken, Node value) : Node
         }
 
         Value.Run(runner);
+
+        if (Value.DataType != variable.DataType)
+        {
+            throw new InvalidSyntaxException($"Unable to assign {Value.DataType} to {variable.DataType}.",
+                Identifier.LineNumber);
+        }
 
         object value = runner.Stack.Pop();
 
