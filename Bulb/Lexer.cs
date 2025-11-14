@@ -7,7 +7,7 @@ public class Lexer
     private readonly Token[] _keywords =
     [
         new(TokenType.Let, "let"), new(TokenType.Print, "print"), new(TokenType.True, "true"),
-        new(TokenType.False, "false")
+        new(TokenType.False, "false"), new(TokenType.If, "if"), new(TokenType.Else, "else")
     ];
 
     private int _i;

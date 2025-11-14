@@ -27,5 +27,7 @@ public enum TokenType
     GreaterThanOrEqual,
     LessThan,
     LessThanOrEqual,
+    If,
+    Else,
     Eof
 }

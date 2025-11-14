@@ -45,11 +45,6 @@ public class Parser
         return cacheToken;
     }
 
-    private Expression ParseExpression()
-    {
-        return ParseComparisonExpression();
-    }
-
     private Node.Node ParseStatement()
     {
         return CurrentToken.Type switch
@@ -58,7 +53,8 @@ public class Parser
             TokenType.Print => ParsePrintStatement(),
             TokenType.OpenCurly => ParseScope(),
             TokenType.Identifier => ParseAssignmentStatement(),
-            _ => throw new InvalidSyntaxException($"Unexpected token {CurrentToken.Value}", CurrentToken.LineNumber)
+            TokenType.If => ParseIfStatement(),
+            _ => throw new InvalidSyntaxException($"Unexpected token `{CurrentToken.Value}`", CurrentToken.LineNumber)
         };
     }
 
@@ -115,6 +111,39 @@ public class Parser
         Eat(TokenType.CloseCurly);
 
         return scope;
+    }
+
+    private IfStatement ParseIfStatement()
+    {
+        IfStatement ifStatement;
+
+        Token ifToken = Eat(TokenType.If);
+
+        Eat(TokenType.OpenParenthesis);
+        Expression condition = ParseExpression();
+        Eat(TokenType.CloseParenthesis);
+
+        Scope scope = ParseScope();
+
+        if (CurrentToken.Type == TokenType.Else)
+        {
+            Eat(TokenType.Else);
+
+            ifStatement = CurrentToken.Type == TokenType.If
+                ? new IfStatement(condition, scope, ifToken, ParseIfStatement())
+                : new IfStatement(condition, scope, ifToken, null, ParseScope());
+        }
+        else
+        {
+            ifStatement = new IfStatement(condition, scope, ifToken);
+        }
+
+        return ifStatement;
+    }
+
+    private Expression ParseExpression()
+    {
+        return ParseComparisonExpression();
     }
 
     private Expression ParseComparisonExpression()
