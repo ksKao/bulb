@@ -1,4 +1,5 @@
 using Bulb.Enums;
+using Bulb.Exceptions;
 using Bulb.Node;
 
 namespace Bulb;
@@ -54,6 +55,9 @@ public class Parser
             TokenType.OpenCurly => ParseScope(),
             TokenType.Identifier => ParseAssignmentStatement(),
             TokenType.If => ParseIfStatement(),
+            TokenType.While => ParseWhileStatement(),
+            TokenType.Break => ParseBreakStatement(),
+            TokenType.Continue => ParseContinueStatement(),
             _ => throw new InvalidSyntaxException($"Unexpected token `{CurrentToken.Value}`", CurrentToken.LineNumber)
         };
     }
@@ -139,6 +143,37 @@ public class Parser
         }
 
         return ifStatement;
+    }
+
+    private WhileStatement ParseWhileStatement()
+    {
+        Token whileToken = Eat(TokenType.While);
+
+        Eat(TokenType.OpenParenthesis);
+
+        Expression condition = ParseExpression();
+
+        Eat(TokenType.CloseParenthesis);
+
+        Scope scope = ParseScope();
+
+        return new WhileStatement(whileToken, condition, scope);
+    }
+
+    private BreakStatement ParseBreakStatement()
+    {
+        Token breakToken = Eat(TokenType.Break);
+        Eat(TokenType.Semicolon);
+
+        return new BreakStatement(breakToken);
+    }
+
+    private ContinueStatement ParseContinueStatement()
+    {
+        Token continueToken = Eat(TokenType.Continue);
+        Eat(TokenType.Semicolon);
+
+        return new ContinueStatement(continueToken);
     }
 
     private Expression ParseExpression()

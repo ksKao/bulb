@@ -1,4 +1,5 @@
 using Bulb.Enums;
+using Bulb.Exceptions;
 
 namespace Bulb.Node;
 

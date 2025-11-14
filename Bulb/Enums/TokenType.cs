@@ -29,5 +29,8 @@ public enum TokenType
     LessThanOrEqual,
     If,
     Else,
+    While,
+    Break,
+    Continue,
     Eof
 }

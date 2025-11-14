@@ -6,9 +6,12 @@ public class Scope : Node
 {
     public List<Node> Statements { get; } = [];
 
+    // only true for interruptable scopes like while, for, functions, and etc...
+    public bool IsStoppable { get; set; } = false;
+
     public override void Run(Runner runner)
     {
-        runner.BeginScope();
+        runner.BeginScope(IsStoppable);
 
         Statements.ForEach(s => s.Run(runner));
 

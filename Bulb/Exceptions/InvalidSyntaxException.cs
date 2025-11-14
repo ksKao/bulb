@@ -1,4 +1,4 @@
-namespace Bulb;
+namespace Bulb.Exceptions;
 
 public class InvalidSyntaxException(string message, int lineNumber) : Exception(message)
 {

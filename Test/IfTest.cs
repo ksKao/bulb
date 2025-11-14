@@ -1,4 +1,4 @@
-using Bulb;
+using Bulb.Exceptions;
 
 namespace Test;
 
@@ -75,5 +75,45 @@ public class IfTest
 
         Assert.Equal("Unexpected token `else`", ex.Message);
         Assert.Equal(3, ex.LineNumber);
+    }
+
+    [Fact(DisplayName = "If Scope Works Normally")]
+    public void If_Scope_Works_Normally()
+    {
+        string output = Utils.RunCode("""
+                                      let x = false;
+
+                                      if (true)
+                                      {
+                                          let y = true;
+                                          
+                                          print x;
+                                          print y;
+                                          
+                                          x = true;
+                                      }
+
+                                      print x;
+                                      """);
+
+        Assert.Equal("false\ntrue\ntrue\n", output);
+    }
+
+    [Fact(DisplayName = "If Within If")]
+    public void If_Within_If()
+    {
+        string output = Utils.RunCode("""
+                                      if (true)
+                                      {
+                                          if (false) { print 10; }
+                                          else
+                                          {
+                                            if (true) { print 20; }
+                                            else { print 30; }
+                                          }
+                                      }
+                                      """);
+
+        Assert.Equal("20\n", output);
     }
 }

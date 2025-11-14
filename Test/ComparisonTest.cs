@@ -1,4 +1,4 @@
-using Bulb;
+using Bulb.Exceptions;
 
 namespace Test;
 

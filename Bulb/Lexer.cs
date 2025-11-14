@@ -1,4 +1,5 @@
 using Bulb.Enums;
+using Bulb.Exceptions;
 
 namespace Bulb;
 
@@ -7,7 +8,8 @@ public class Lexer
     private readonly Token[] _keywords =
     [
         new(TokenType.Let, "let"), new(TokenType.Print, "print"), new(TokenType.True, "true"),
-        new(TokenType.False, "false"), new(TokenType.If, "if"), new(TokenType.Else, "else")
+        new(TokenType.False, "false"), new(TokenType.If, "if"), new(TokenType.Else, "else"),
+        new(TokenType.While, "while"), new(TokenType.Break, "break"), new(TokenType.Continue, "continue")
     ];
 
     private int _i;

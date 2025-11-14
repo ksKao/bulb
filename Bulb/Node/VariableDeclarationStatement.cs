@@ -1,3 +1,5 @@
+using Bulb.Exceptions;
+
 namespace Bulb.Node;
 
 public class VariableDeclarationStatement(Token identifier, Expression value) : Node

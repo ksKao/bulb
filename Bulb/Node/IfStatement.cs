@@ -1,6 +1,7 @@
 using System.Text;
 
 using Bulb.Enums;
+using Bulb.Exceptions;
 
 namespace Bulb.Node;
 

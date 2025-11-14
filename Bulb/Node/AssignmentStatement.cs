@@ -1,3 +1,5 @@
+using Bulb.Exceptions;
+
 namespace Bulb.Node;
 
 public class AssignmentStatement(Token identifierToken, Expression value) : Node

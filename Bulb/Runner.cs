@@ -29,7 +29,7 @@ public class Runner
      * }
      * ...some more code...
      */
-    private Stack<int> NumberOfVariablesDeclaredBeforeScope { get; } = [];
+    public Stack<ScopeContext> ScopeContexts { get; } = [];
 
     public bool TryGetVariable(string identifier, out Variable variable)
     {
@@ -40,14 +40,14 @@ public class Runner
         return found is not null;
     }
 
-    public void BeginScope()
+    public void BeginScope(bool isStoppable)
     {
-        NumberOfVariablesDeclaredBeforeScope.Push(Variables.Count);
+        ScopeContexts.Push(new ScopeContext(Variables.Count, isStoppable));
     }
 
     public void EndScope()
     {
-        int popCount = Variables.Count - NumberOfVariablesDeclaredBeforeScope.Pop();
+        int popCount = Variables.Count - ScopeContexts.Pop().NumberOfVariablesDeclaredBefore;
 
         if (popCount <= 0)
         {
