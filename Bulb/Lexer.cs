@@ -9,7 +9,8 @@ public class Lexer
     [
         new(TokenType.Let, "let"), new(TokenType.Print, "print"), new(TokenType.True, "true"),
         new(TokenType.False, "false"), new(TokenType.If, "if"), new(TokenType.Else, "else"),
-        new(TokenType.While, "while"), new(TokenType.Break, "break"), new(TokenType.Continue, "continue")
+        new(TokenType.While, "while"), new(TokenType.Break, "break"), new(TokenType.Continue, "continue"),
+        new(TokenType.For, "for")
     ];
 
     private int _i;
@@ -129,9 +130,23 @@ public class Lexer
                 token = new Token(TokenType.Semicolon, ";", _lineNumber);
                 break;
             case '+':
+                if (NextChar == '+')
+                {
+                    Advance();
+                    token = new Token(TokenType.Increment, "++", _lineNumber);
+                    break;
+                }
+
                 token = new Token(TokenType.Plus, "+", _lineNumber);
                 break;
             case '-':
+                if (NextChar == '-')
+                {
+                    Advance();
+                    token = new Token(TokenType.Decrement, "--", _lineNumber);
+                    break;
+                }
+
                 token = new Token(TokenType.Minus, "-", _lineNumber);
                 break;
             case '*':

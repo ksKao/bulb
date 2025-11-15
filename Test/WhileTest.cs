@@ -1,3 +1,5 @@
+using Bulb.Exceptions;
+
 namespace Test;
 
 public class WhileTest
@@ -101,5 +103,32 @@ public class WhileTest
                                       """);
 
         Assert.Equal("1\ntrue\n2\n3\ntrue\n1\ntrue\n2\n3\ntrue\n1\ntrue\n2\n3\ntrue\n3\n", output);
+    }
+
+    [Fact(DisplayName = "Cannot Break In Root")]
+    public void Cannot_Break_In_Root()
+    {
+        InvalidSyntaxException ex = Assert.Throws<InvalidSyntaxException>(() => Utils.RunCode("break;"));
+
+        Assert.Equal("Invalid break statement.", ex.Message);
+        Assert.Equal(1, ex.LineNumber);
+    }
+
+    [Fact(DisplayName = "Cannot Continue In Root")]
+    public void Cannot_Continue_In_Root()
+    {
+        InvalidSyntaxException ex = Assert.Throws<InvalidSyntaxException>(() => Utils.RunCode("continue;"));
+
+        Assert.Equal("Invalid continue statement.", ex.Message);
+        Assert.Equal(1, ex.LineNumber);
+    }
+
+    [Fact(DisplayName = "Cannot Break in Scope")]
+    public void Cannot_Break_In_Scope()
+    {
+        InvalidSyntaxException ex = Assert.Throws<InvalidSyntaxException>(() => Utils.RunCode("{ break; }"));
+
+        Assert.Equal("Invalid break statement.", ex.Message);
+        Assert.Equal(1, ex.LineNumber);
     }
 }

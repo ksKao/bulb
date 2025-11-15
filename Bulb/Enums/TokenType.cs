@@ -32,5 +32,8 @@ public enum TokenType
     While,
     Break,
     Continue,
+    For,
+    Increment,
+    Decrement,
     Eof
 }

@@ -15,7 +15,7 @@ public class ContinueStatement(Token continueToken) : Node
         }
 
         // end all the scopes before the breaking loop
-        while (!runner.ScopeContexts.Last().IsStoppable)
+        while (!runner.ScopeContexts.Peek().IsStoppable)
         {
             runner.EndScope();
         }

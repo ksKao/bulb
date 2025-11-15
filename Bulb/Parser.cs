@@ -10,6 +10,7 @@ public class Parser
     private Token[] _tokens = [];
 
     private Token CurrentToken => _tokens[_i];
+    private Token? NextToken => _i < _tokens.Length - 1 ? _tokens[_i + 1] : null;
     private bool IsEof => CurrentToken.Type == TokenType.Eof;
 
     public Program Parse(Token[] tokens)
@@ -53,12 +54,12 @@ public class Parser
             TokenType.Let => ParseVariableDeclarationStatement(),
             TokenType.Print => ParsePrintStatement(),
             TokenType.OpenCurly => ParseScope(),
-            TokenType.Identifier => ParseAssignmentStatement(),
             TokenType.If => ParseIfStatement(),
             TokenType.While => ParseWhileStatement(),
             TokenType.Break => ParseBreakStatement(),
             TokenType.Continue => ParseContinueStatement(),
-            _ => throw new InvalidSyntaxException($"Unexpected token `{CurrentToken.Value}`", CurrentToken.LineNumber)
+            TokenType.For => ParseForStatement(),
+            _ => ParseExpressionStatement()
         };
     }
 
@@ -86,19 +87,6 @@ public class Parser
         Eat(TokenType.Semicolon);
 
         return variableDeclarationStatement;
-    }
-
-    private AssignmentStatement ParseAssignmentStatement()
-    {
-        Token identifier = Eat(TokenType.Identifier);
-
-        Eat(TokenType.Equals);
-
-        AssignmentStatement assignmentStatement = new(identifier, ParseExpression());
-
-        Eat(TokenType.Semicolon);
-
-        return assignmentStatement;
     }
 
     private Scope ParseScope()
@@ -176,10 +164,64 @@ public class Parser
         return new ContinueStatement(continueToken);
     }
 
+    private ForStatement ParseForStatement()
+    {
+        Token forToken = Eat(TokenType.For);
+
+        Eat(TokenType.OpenParenthesis);
+
+        Node.Node? initStatement = null;
+
+        if (CurrentToken.Type != TokenType.Semicolon)
+        {
+            initStatement = ParseStatement();
+        }
+        else
+        {
+            Eat(TokenType.Semicolon);
+        }
+
+        Expression? conditionExpression = CurrentToken.Type == TokenType.Semicolon ? null : ParseExpression();
+
+        Eat(TokenType.Semicolon);
+
+        Expression? updateExpression = CurrentToken.Type == TokenType.CloseParenthesis ? null : ParseExpression();
+
+        Eat(TokenType.CloseParenthesis);
+
+        return new ForStatement(forToken, initStatement, conditionExpression, updateExpression, ParseScope());
+    }
+
+    private Expression ParseExpressionStatement()
+    {
+        Expression expression = ParseExpression();
+
+        Eat(TokenType.Semicolon);
+
+        return expression;
+    }
+
     private Expression ParseExpression()
     {
+        return ParseAssignmentExpression();
+    }
+
+    private Expression ParseAssignmentExpression()
+    {
+        while (CurrentToken.Type == TokenType.Identifier && NextToken?.Type == TokenType.Equals)
+        {
+            Token identifier = Eat(TokenType.Identifier);
+
+            Eat(TokenType.Equals);
+
+            AssignmentExpression assignmentExpression = new(identifier, ParseAssignmentExpression());
+
+            return assignmentExpression;
+        }
+
         return ParseComparisonExpression();
     }
+
 
     private Expression ParseComparisonExpression()
     {
@@ -212,19 +254,19 @@ public class Parser
 
     private Expression ParseMultiplicativeExpression()
     {
-        Expression left = ParsePrefixExpression();
+        Expression left = ParseUnaryExpression();
 
         while (CurrentToken.Type is TokenType.Multiply or TokenType.Divide or TokenType.And)
         {
             Token operatorToken = Eat();
 
-            left = new BinaryExpression(operatorToken, left, ParsePrefixExpression());
+            left = new BinaryExpression(operatorToken, left, ParseUnaryExpression());
         }
 
         return left;
     }
 
-    private Expression ParsePrefixExpression()
+    private Expression ParseUnaryExpression()
     {
         while (CurrentToken.Type is TokenType.Not)
         {
@@ -232,9 +274,28 @@ public class Parser
             {
                 case TokenType.Not:
                     Token operatorToken = Eat();
-                    PrefixExpression prefixExpression = new(operatorToken, ParsePrefixExpression());
-                    return prefixExpression;
+                    UnaryExpression unaryExpression = new(operatorToken, ParseUnaryExpression());
+                    return unaryExpression;
             }
+        }
+
+        return ParseUpdateExpression();
+    }
+
+    private Expression ParseUpdateExpression()
+    {
+        if (CurrentToken.Type is TokenType.Identifier && NextToken?.Type is TokenType.Increment or TokenType.Decrement)
+        {
+            Token identifierToken = Eat(TokenType.Identifier);
+            Token operatorToken = Eat();
+            return new UpdateExpression(identifierToken, operatorToken, false);
+        }
+
+        if (CurrentToken.Type is TokenType.Increment or TokenType.Decrement)
+        {
+            Token operatorToken = Eat();
+            Token identifierToken = Eat(TokenType.Identifier);
+            return new UpdateExpression(identifierToken, operatorToken, true);
         }
 
         return ParsePrimaryExpression();

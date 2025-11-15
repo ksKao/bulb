@@ -3,7 +3,7 @@ using Bulb.Exceptions;
 
 namespace Bulb.Node;
 
-public class PrefixExpression(Token operatorToken, Expression value) : Expression
+public class UnaryExpression(Token operatorToken, Expression value) : Expression
 {
     private Token OperatorToken { get; } = operatorToken;
     private Expression Value { get; } = value;
@@ -28,7 +28,7 @@ public class PrefixExpression(Token operatorToken, Expression value) : Expressio
                 runner.Stack.Add(!value);
                 break;
             default:
-                throw new InvalidSyntaxException($"Unknown prefix operator encountered (`{OperatorToken.Value}`)",
+                throw new InvalidSyntaxException($"Unknown unary operator encountered (`{OperatorToken.Value}`)",
                     OperatorToken.LineNumber);
         }
     }
@@ -36,7 +36,7 @@ public class PrefixExpression(Token operatorToken, Expression value) : Expressio
     public override string ToString(string indent)
     {
         return $"""
-                {indent} Prefix Expression:
+                {indent} Unary Expression:
                 {indent + "\t"} Operator: {OperatorToken.Value}
                 {indent + "\t"} Value:
                 {Value.ToString(indent + "\t\t")}

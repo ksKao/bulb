@@ -9,13 +9,13 @@ public class BreakStatement(Token breakToken) : Node
     public override void Run(Runner runner)
     {
         // check if we are actually in a valid breakable statement
-        if (!runner.ScopeContexts.Any(x => x.IsStoppable))
+        if (runner.ScopeContexts.Count == 0 || !runner.ScopeContexts.Any(x => x.IsStoppable))
         {
             throw new InvalidSyntaxException("Invalid break statement.", BreakToken.LineNumber);
         }
 
         // end all the scopes before the breaking loop
-        while (!runner.ScopeContexts.Last().IsStoppable)
+        while (!runner.ScopeContexts.Peek().IsStoppable)
         {
             runner.EndScope();
         }

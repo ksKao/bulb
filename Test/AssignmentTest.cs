@@ -54,4 +54,30 @@ public class AssignmentTest
 
         Assert.Equal("20\n", output);
     }
+
+    [Fact(DisplayName = "Cannot Assign Different Type")]
+    public void Cannot_Assign_Different_Type()
+    {
+        InvalidSyntaxException ex = Assert.Throws<InvalidSyntaxException>(() => Utils.RunCode("""
+            let x = 10;
+            x = true;
+            """));
+
+        Assert.Equal("Unable to assign Boolean to Number.", ex.Message);
+        Assert.Equal(2, ex.LineNumber);
+    }
+
+    [Fact(DisplayName = "Chain Assignment")]
+    public void Chain_Assignment()
+    {
+        string output = Utils.RunCode("""
+                                      let y = 0;
+                                      let x = 0;
+                                      x = y = 20;
+                                      print x;
+                                      print y;
+                                      """);
+
+        Assert.Equal("20\n20\n", output);
+    }
 }

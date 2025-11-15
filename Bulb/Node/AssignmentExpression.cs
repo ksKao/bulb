@@ -1,11 +1,14 @@
+using Bulb.Enums;
 using Bulb.Exceptions;
 
 namespace Bulb.Node;
 
-public class AssignmentStatement(Token identifierToken, Expression value) : Node
+public class AssignmentExpression(Token identifierToken, Expression value) : Expression
 {
     private Token Identifier { get; } = identifierToken;
     private Expression Value { get; } = value;
+
+    public override DataType DataType { get; protected set; }
 
 
     public override void Run(Runner runner)
@@ -17,6 +20,8 @@ public class AssignmentStatement(Token identifierToken, Expression value) : Node
 
         Value.Run(runner);
 
+        DataType = Value.DataType;
+
         if (Value.DataType != variable.DataType)
         {
             throw new InvalidSyntaxException($"Unable to assign {Value.DataType} to {variable.DataType}.",
@@ -26,6 +31,8 @@ public class AssignmentStatement(Token identifierToken, Expression value) : Node
         object value = runner.Stack.Pop();
 
         runner.Stack[variable.StackLocation] = value;
+
+        runner.Stack.Add(value);
     }
 
     public override string ToString(string indent)
