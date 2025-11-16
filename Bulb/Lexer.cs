@@ -1,3 +1,5 @@
+using System.Text;
+
 using Bulb.Enums;
 using Bulb.Exceptions;
 
@@ -214,6 +216,51 @@ public class Lexer
                 }
 
                 token = new Token(TokenType.LessThan, "<", _lineNumber);
+                break;
+            case '"':
+                StringBuilder sb = new();
+
+                int startLineNumber = _lineNumber;
+                while (NextChar != '"')
+                {
+                    if (NextChar == '\0')
+                    {
+                        throw new InvalidSyntaxException("Missing closing `\"` for string literal", _lineNumber);
+                    }
+
+                    if (NextChar == '\\')
+                    {
+                        Advance();
+
+                        switch (NextChar)
+                        {
+                            case 'n':
+                                sb.Append('\n');
+                                break;
+                            case 't':
+                                sb.Append('\t');
+                                break;
+                            case '\\':
+                                sb.Append('\\');
+                                break;
+                            case '\"':
+                                sb.Append('\"');
+                                break;
+                            default:
+                                throw new InvalidSyntaxException($"`\\{NextChar}` is not a valid escape sequence.",
+                                    _lineNumber);
+                        }
+                    }
+                    else
+                    {
+                        sb.Append(NextChar);
+                    }
+
+                    Advance();
+                }
+
+                token = new Token(TokenType.String, sb.ToString(), startLineNumber);
+                Advance();
                 break;
             default:
                 throw new InvalidSyntaxException($"Invalid symbol encountered. `{CurrentChar}`", _lineNumber);

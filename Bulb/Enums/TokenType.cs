@@ -35,5 +35,6 @@ public enum TokenType
     For,
     Increment,
     Decrement,
+    String,
     Eof
 }

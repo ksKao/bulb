@@ -320,6 +320,8 @@ public class Parser
             case TokenType.False:
                 Eat(TokenType.False);
                 return new BooleanLiteral(false);
+            case TokenType.String:
+                return new StringLiteral(Eat(TokenType.String).Value);
             default:
                 throw new InvalidSyntaxException($"Unexpected token `{CurrentToken.Value}`", CurrentToken.LineNumber);
         }
