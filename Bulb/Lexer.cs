@@ -73,8 +73,14 @@ public class Lexer
     {
         string value = "";
 
-        while (char.IsDigit(CurrentChar))
+        bool decimalEncountered = false;
+        while (char.IsDigit(CurrentChar) || (!decimalEncountered && CurrentChar == '.'))
         {
+            if (CurrentChar == '.')
+            {
+                decimalEncountered = true;
+            }
+
             value += CurrentChar;
             Advance();
         }
