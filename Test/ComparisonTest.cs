@@ -137,4 +137,24 @@ public class ComparisonTest
 
         Assert.Equal("true\n", output);
     }
+
+    [Fact(DisplayName = "String Comparison")]
+    public void String_Comparison()
+    {
+        string output = Utils.RunCode("""
+                                      print "abc" == "abc";
+                                      """);
+
+        Assert.Equal("true\n", output);
+    }
+
+    [Fact(DisplayName = "String Comparison Not Equals")]
+    public void String_Comparison_Not_Equals()
+    {
+        string output = Utils.RunCode("""
+                                      print "abc" != "def";
+                                      """);
+
+        Assert.Equal("true\n", output);
+    }
 }

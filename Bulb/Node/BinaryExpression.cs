@@ -28,7 +28,7 @@ public class BinaryExpression(Token operatorToken, Expression left, Expression r
 
         ValidateType();
 
-        if (IsString)
+        if (IsString && OperatorToken.Type == TokenType.Plus)
         {
             string? rightValue = runner.Stack.Pop().ToString();
             string? leftValue = runner.Stack.Pop().ToString();
