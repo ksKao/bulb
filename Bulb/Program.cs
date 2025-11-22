@@ -11,7 +11,9 @@ internal static class App
         {
             if (args.Length == 0)
             {
-                throw new ArgumentException("File path is required.");
+                Console.WriteLine("Missing path.");
+                Console.WriteLine("Usage: bulb <path_to_script>");
+                Environment.Exit(1);
             }
 
             string filePath = args[0];
@@ -22,7 +24,6 @@ internal static class App
 
             Program program = new Parser().Parse(tokens);
 
-            // Console.WriteLine(program);
             program.Run(new Runner());
         }
         catch (InvalidSyntaxException e)
