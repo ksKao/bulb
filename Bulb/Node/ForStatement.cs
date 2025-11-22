@@ -80,11 +80,11 @@ public class ForStatement(
         return $"""
                 {indent} For Statement:
                 {indent + "\t"} Init Statement:
-                {InitStatement.ToString(indent + "\t\t")}
+                {InitStatement?.ToString(indent + "\t\t") ?? "<empty>"}
                 {indent + "\t"} Condition Expression:
-                {ConditionExpression.ToString(indent + "\t\t")}
+                {ConditionExpression?.ToString(indent + "\t\t") ?? "<empty>"}
                 {indent + "\t"} Update Expression:
-                {UpdateExpression.ToString(indent + "\t\t")}
+                {UpdateExpression?.ToString(indent + "\t\t") ?? "<empty>"}
                 {indent + "\t"} Body:
                 {Scope.ToString(indent + "\t\t")}
                 """;
