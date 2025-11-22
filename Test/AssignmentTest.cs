@@ -63,7 +63,7 @@ public class AssignmentTest
             x = true;
             """));
 
-        Assert.Equal("Unable to assign Boolean to Number.", ex.Message);
+        Assert.Equal("Unable to assign bool to number.", ex.Message);
         Assert.Equal(2, ex.LineNumber);
     }
 

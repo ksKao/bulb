@@ -36,5 +36,10 @@ public enum TokenType
     Increment,
     Decrement,
     String,
+    Function,
+    Colon,
+    Comma,
+    Return,
+    Void,
     Eof
 }

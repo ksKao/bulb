@@ -124,7 +124,7 @@ public class ComparisonTest
                           """)
         );
 
-        Assert.Equal("Unable to `<` Number and Boolean", ex.Message);
+        Assert.Equal("Unable to `<` number and bool", ex.Message);
         Assert.Equal(1, ex.LineNumber);
     }
 

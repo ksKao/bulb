@@ -1,4 +1,3 @@
-using Bulb.Enums;
 using Bulb.Exceptions;
 
 namespace Bulb.Node;
@@ -22,7 +21,7 @@ public class ForStatement(
         Scope.IsStoppable = true;
 
         // begin a scope at the start because we want to clean up the variable declared in the init statement
-        runner.BeginScope(false);
+        runner.BeginScope(false, null);
 
         InitStatement?.Run(runner);
 

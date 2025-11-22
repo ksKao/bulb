@@ -1,13 +1,20 @@
+using Bulb.Node;
+
 namespace Bulb;
 
 public class Runner
 {
     public List<Variable> Variables { get; } = [];
+    public List<FunctionDeclarationStatement> Functions { get; } = [];
 
     // cant use the actual Stack class here because we need to modify the elements in the middle for assignment statement
     public List<object> Stack { get; } = [];
 
     /*
+     * stores the number of variables declared when different scope starts
+     * for example:
+     * ...some code...
+     * let a = 1;*
      * {
      *      -- At this point, the value will be [1]
      *      let b = 2;
@@ -18,11 +25,6 @@ public class Runner
      *          {
      *              -- At this point, the value will be [1, 3, 4]
      *              let e = 5;
-
-     * stores the number of variables declared when different scope starts
-     * for example:
-     * ...some code...
-     * let a = 1;*
      *          }
      *          -- At this point, the stack will be [1, 3]
      *      }
@@ -33,32 +35,37 @@ public class Runner
 
     public bool TryGetVariable(string identifier, out Variable variable)
     {
-        Variable? found = Variables.FirstOrDefault(v => v.Name == identifier);
+        Variable? found = Variables.LastOrDefault(v => v.Name == identifier);
 
         variable = found!;
 
         return found is not null;
     }
 
-    public void BeginScope(bool isStoppable)
+    public void BeginScope(bool isStoppable, string? returnType)
     {
-        ScopeContexts.Push(new ScopeContext(Variables.Count, isStoppable));
+        ScopeContexts.Push(new ScopeContext(Variables.Count, Functions.Count, isStoppable, returnType));
     }
 
     public void EndScope()
     {
-        int popCount = Variables.Count - ScopeContexts.Pop().NumberOfVariablesDeclaredBefore;
+        ScopeContext thisScopeContext = ScopeContexts.Pop();
+        int variablePopCount = Variables.Count - thisScopeContext.NumberOfVariablesDeclaredBefore;
+        int functionPopCount = Functions.Count - thisScopeContext.NumberOfFunctionsDeclaredBefore;
 
-        if (popCount <= 0)
+        if (variablePopCount > 0)
         {
-            return;
+            Variables.RemoveRange(Variables.Count - variablePopCount, variablePopCount);
+
+            for (int i = 0; i < variablePopCount; i++)
+            {
+                Stack.Pop();
+            }
         }
 
-        Variables.RemoveRange(Variables.Count - popCount, popCount);
-
-        for (int i = 0; i < popCount; i++)
+        if (functionPopCount > 0)
         {
-            Stack.Pop();
+            Functions.RemoveRange(Functions.Count - functionPopCount, functionPopCount);
         }
     }
 }

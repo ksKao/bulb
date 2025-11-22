@@ -12,7 +12,8 @@ public class Lexer
         new(TokenType.Let, "let"), new(TokenType.Print, "print"), new(TokenType.True, "true"),
         new(TokenType.False, "false"), new(TokenType.If, "if"), new(TokenType.Else, "else"),
         new(TokenType.While, "while"), new(TokenType.Break, "break"), new(TokenType.Continue, "continue"),
-        new(TokenType.For, "for")
+        new(TokenType.For, "for"), new(TokenType.Function, "function"), new(TokenType.Return, "return"),
+        new(TokenType.Void, "void")
     ];
 
     private int _i;
@@ -267,6 +268,12 @@ public class Lexer
 
                 token = new Token(TokenType.String, sb.ToString(), startLineNumber);
                 Advance();
+                break;
+            case ':':
+                token = new Token(TokenType.Colon, ":", _lineNumber);
+                break;
+            case ',':
+                token = new Token(TokenType.Comma, ",", _lineNumber);
                 break;
             default:
                 throw new InvalidSyntaxException($"Invalid symbol encountered. `{CurrentChar}`", _lineNumber);

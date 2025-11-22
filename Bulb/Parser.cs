@@ -59,6 +59,8 @@ public class Parser
             TokenType.Break => ParseBreakStatement(),
             TokenType.Continue => ParseContinueStatement(),
             TokenType.For => ParseForStatement(),
+            TokenType.Function => ParseFunctionDeclarationStatement(),
+            TokenType.Return => ParseReturnStatement(),
             _ => ParseExpressionStatement()
         };
     }
@@ -192,13 +194,71 @@ public class Parser
         return new ForStatement(forToken, initStatement, conditionExpression, updateExpression, ParseScope());
     }
 
-    private Expression ParseExpressionStatement()
+    private ExpressionStatement ParseExpressionStatement()
     {
         Expression expression = ParseExpression();
 
         Eat(TokenType.Semicolon);
 
-        return expression;
+        return new ExpressionStatement(expression);
+    }
+
+    private FunctionDeclarationStatement ParseFunctionDeclarationStatement()
+    {
+        Eat(TokenType.Function);
+        Token identifierToken = Eat(TokenType.Identifier);
+
+        List<(Token name, Token type)> parameters = [];
+
+        Eat(TokenType.OpenParenthesis);
+
+        while (CurrentToken.Type != TokenType.CloseParenthesis)
+        {
+            Token name = Eat(TokenType.Identifier);
+
+            Eat(TokenType.Colon);
+
+            Token type = Eat(TokenType.Identifier);
+
+            parameters.Add((name, type));
+
+            if (CurrentToken.Type != TokenType.CloseParenthesis)
+            {
+                Eat(TokenType.Comma);
+            }
+        }
+
+        Eat(TokenType.CloseParenthesis);
+
+        Eat(TokenType.Colon);
+
+        Token returnTypeToken = Eat();
+
+        if (returnTypeToken.Type is not (TokenType.Identifier or TokenType.Void))
+        {
+            throw new InvalidSyntaxException($"Unexpected return type token `{returnTypeToken.Value}`",
+                returnTypeToken.LineNumber);
+        }
+
+        return new FunctionDeclarationStatement(identifierToken, parameters, returnTypeToken,
+            ParseScope());
+    }
+
+    private ReturnStatement ParseReturnStatement()
+    {
+        Token returnToken = Eat(TokenType.Return);
+
+        if (CurrentToken.Type == TokenType.Semicolon)
+        {
+            Eat(TokenType.Semicolon);
+            return new ReturnStatement(returnToken, null);
+        }
+
+        Expression returnValue = ParseExpression();
+
+        Eat(TokenType.Semicolon);
+
+        return new ReturnStatement(returnToken, returnValue);
     }
 
     private Expression ParseExpression()
@@ -298,7 +358,34 @@ public class Parser
             return new UpdateExpression(identifierToken, operatorToken, true);
         }
 
-        return ParsePrimaryExpression();
+        return ParseCallExpression();
+    }
+
+    private Expression ParseCallExpression()
+    {
+        if (CurrentToken.Type != TokenType.Identifier || NextToken?.Type != TokenType.OpenParenthesis)
+        {
+            return ParsePrimaryExpression();
+        }
+
+        Token identifierToken = Eat(TokenType.Identifier);
+        List<Expression> arguments = [];
+
+        Eat(TokenType.OpenParenthesis);
+
+        while (CurrentToken.Type != TokenType.CloseParenthesis)
+        {
+            arguments.Add(ParseExpression());
+
+            if (CurrentToken.Type != TokenType.CloseParenthesis)
+            {
+                Eat(TokenType.Comma);
+            }
+        }
+
+        Eat(TokenType.CloseParenthesis);
+
+        return new CallExpression(identifierToken, arguments);
     }
 
     private Expression ParsePrimaryExpression()

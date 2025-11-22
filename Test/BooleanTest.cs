@@ -103,7 +103,7 @@ public class BooleanTest
                           """)
         );
 
-        Assert.Equal("Unable to `||` Number and Boolean", ex.Message);
+        Assert.Equal("Unable to `||` number and bool", ex.Message);
         Assert.Equal(1, ex.LineNumber);
     }
 
@@ -116,7 +116,7 @@ public class BooleanTest
                           """)
         );
 
-        Assert.Equal("Unable to `!` Number", ex.Message);
+        Assert.Equal("Unable to `!` number", ex.Message);
         Assert.Equal(1, ex.LineNumber);
     }
 }

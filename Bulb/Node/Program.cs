@@ -1,5 +1,7 @@
 using System.Text;
 
+using Bulb.Exceptions;
+
 namespace Bulb.Node;
 
 public class Program : Node
@@ -8,7 +10,11 @@ public class Program : Node
 
     public override void Run(Runner runner)
     {
-        Statements.ForEach(s => s.Run(runner));
+        try
+        {
+            Statements.ForEach(s => s.Run(runner));
+        }
+        catch (ReturnException) { }
     }
 
     public override string ToString()
