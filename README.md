@@ -98,7 +98,7 @@ Variables declared in the outer scope cannot be redeclared in the inner scope. F
 ```js
 let a = 10;
 {
-  let a = 10;
+  let a = 10; // error!
 }
 ```
 
@@ -114,6 +114,13 @@ function printNum(num: number): void {
 }
 
 printNum(sum(1, 2));
+```
+
+### Comments
+Comments are also supported, but multiline comments are not.
+```js
+// this is a comment
+print x;
 ```
 
 ## Examples
