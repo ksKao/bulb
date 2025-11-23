@@ -44,6 +44,15 @@ public class Lexer
             {
                 Advance();
             }
+            else if (CurrentChar == '/' && NextChar == '/')
+            {
+                Advance();
+
+                while (CurrentChar is not ('\n' or '\0'))
+                {
+                    Advance();
+                }
+            }
             else
             {
                 tokens.Add(ParseSymbol());
