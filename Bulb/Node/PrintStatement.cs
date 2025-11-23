@@ -1,9 +1,10 @@
-using Bulb.Enums;
+using Bulb.Exceptions;
 
 namespace Bulb.Node;
 
-public class PrintStatement(Expression value) : Node
+public class PrintStatement(Token printToken, Expression value) : Node
 {
+    private Token PrintToken { get; } = printToken;
     private Expression Value { get; } = value;
 
     public override void Run(Runner runner)
@@ -11,6 +12,11 @@ public class PrintStatement(Expression value) : Node
         Value.Run(runner);
 
         object value = runner.Stack.Pop();
+
+        if (Value.DataType.Name == "void")
+        {
+            throw new InvalidSyntaxException("Unable to print `void`", PrintToken.LineNumber);
+        }
 
         if (Value.DataType == DataType.Boolean)
         {

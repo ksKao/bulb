@@ -17,4 +17,19 @@ public class DeclarationTest
         Assert.Equal("Variable `x` already exists.", ex.Message);
         Assert.Equal(2, ex.LineNumber);
     }
+
+    [Fact(DisplayName = "Cannot Initialize Void Type")]
+    public void Cannot_Initialize_Void_Type()
+    {
+        InvalidSyntaxException ex = Assert.Throws<InvalidSyntaxException>(() =>
+            Utils.RunCode("""
+                          function test(): void {}
+
+                          let x = test();
+                          """)
+        );
+
+        Assert.Equal("Unable to declare a variable with `void` type", ex.Message);
+        Assert.Equal(3, ex.LineNumber);
+    }
 }

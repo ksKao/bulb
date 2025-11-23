@@ -67,6 +67,20 @@ public class AssignmentTest
         Assert.Equal(2, ex.LineNumber);
     }
 
+    [Fact(DisplayName = "Cannot Assign Void Type")]
+    public void Cannot_Assign_Void_Type()
+    {
+        InvalidSyntaxException ex = Assert.Throws<InvalidSyntaxException>(() => Utils.RunCode("""
+            function test() : void {}
+
+            let x = 10;
+            x = test();
+            """));
+
+        Assert.Equal("Unable to assign void to number.", ex.Message);
+        Assert.Equal(4, ex.LineNumber);
+    }
+
     [Fact(DisplayName = "Chain Assignment")]
     public void Chain_Assignment()
     {

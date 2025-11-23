@@ -1,3 +1,5 @@
+using Bulb.Exceptions;
+
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
 
 namespace Test;
@@ -65,5 +67,18 @@ public class PrintTest
                                       """);
 
         Assert.Equal("test\n", output);
+    }
+
+    [Fact(DisplayName = "Cannot Print Void Type")]
+    public void Cannot_Print_Void_Type()
+    {
+        InvalidSyntaxException ex = Assert.Throws<InvalidSyntaxException>(() => Utils.RunCode("""
+            function test(): void {}
+
+            print test();
+            """));
+
+        Assert.Equal("Unable to print `void`", ex.Message);
+        Assert.Equal(3, ex.LineNumber);
     }
 }

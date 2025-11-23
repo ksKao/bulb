@@ -67,9 +67,9 @@ public class Parser
 
     private PrintStatement ParsePrintStatement()
     {
-        Eat(TokenType.Print);
+        Token printToken = Eat(TokenType.Print);
 
-        PrintStatement printStatement = new(ParseExpression());
+        PrintStatement printStatement = new(printToken, ParseExpression());
 
         Eat(TokenType.Semicolon);
 

@@ -16,6 +16,11 @@ public class VariableDeclarationStatement(Token identifier, Expression value) : 
 
         Value.Run(runner);
 
+        if (Value.DataType.Name == "void")
+        {
+            throw new InvalidSyntaxException("Unable to declare a variable with `void` type", Identifier.LineNumber);
+        }
+
         runner.Variables.Add(new Variable(Identifier.Value, runner.Stack.Count - 1, Value.DataType));
     }
 

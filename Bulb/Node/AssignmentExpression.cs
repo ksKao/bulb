@@ -1,4 +1,3 @@
-using Bulb.Enums;
 using Bulb.Exceptions;
 
 namespace Bulb.Node;
@@ -22,7 +21,7 @@ public class AssignmentExpression(Token identifierToken, Expression value) : Exp
 
         DataType = Value.DataType;
 
-        if (Value.DataType != variable.DataType)
+        if (Value.DataType != variable.DataType || Value.DataType.Name == "void")
         {
             throw new InvalidSyntaxException($"Unable to assign {Value.DataType} to {variable.DataType}.",
                 Identifier.LineNumber);
