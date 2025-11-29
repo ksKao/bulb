@@ -36,13 +36,19 @@ public class WhileStatement(Token whileToken, Expression condition, Scope scope)
                 {
                     Scope.Run(runner);
                 }
-                catch (ContinueException) { }
+                catch (ContinueException)
+                {
+                    runner.EndScope();
+                }
 
                 Condition.Run(runner);
                 shouldRun = (bool)runner.Stack.Pop();
             }
         }
-        catch (BreakException) { }
+        catch (BreakException)
+        {
+            runner.EndScope();
+        }
     }
 
     public override string ToString(string indent)

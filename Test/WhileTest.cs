@@ -131,4 +131,51 @@ public class WhileTest
         Assert.Equal("Invalid break statement.", ex.Message);
         Assert.Equal(1, ex.LineNumber);
     }
+
+    [Fact(DisplayName = "Variable Declaration in While With Continue")]
+    public void Variable_Declaration_In_While_With_Continue()
+    {
+        string output = Utils.RunCode("""
+                                      let x = 0;
+
+                                      while (x < 5)
+                                      {
+                                        let y = 0;
+                                        x = x + 1;
+                                        
+                                        if (x == 2)
+                                        {
+                                            continue;
+                                        }
+                                      }
+
+                                      print x;
+                                      """);
+
+        Assert.Equal("5\n", output);
+    }
+
+    [Fact(DisplayName = "Variable Redeclaration After While Break")]
+    public void Variable_Redeclaration_After_While_Break()
+    {
+        string output = Utils.RunCode("""
+                                      let x = 0;
+
+                                      while (x < 5)
+                                      {
+                                        let y = 0;
+                                        x = x + 1;
+                                        
+                                        if (x == 2)
+                                        {
+                                            break;
+                                        }
+                                      }
+
+                                      let y = 5;
+                                      print y;
+                                      """);
+
+        Assert.Equal("5\n", output);
+    }
 }

@@ -1,4 +1,5 @@
 using Bulb.DataType;
+using Bulb.Enums;
 using Bulb.Node;
 
 namespace Bulb;
@@ -9,7 +10,29 @@ public class Runner
         [BaseDataType.Number, BaseDataType.Boolean, BaseDataType.String, BaseDataType.Void];
 
     public List<Variable> Variables { get; } = [];
-    public List<FunctionDeclarationStatement> Functions { get; } = [];
+
+    public List<FunctionDeclarationStatement> Functions { get; } =
+    [
+        new BuiltInFunctionStatement(new Token(TokenType.Identifier, "prompt"), [],
+            new Token(TokenType.Identifier, "string"),
+            runner =>
+            {
+                string? input = Console.ReadLine();
+
+                runner.Stack.Add(input ?? "");
+            }),
+        new BuiltInFunctionStatement(new Token(TokenType.Identifier, "prompt"),
+            [(new Token(TokenType.Identifier, "a"), new Token(TokenType.Identifier, "string"))],
+            new Token(TokenType.Identifier, "string"),
+            runner =>
+            {
+                string prompt = (string)runner.Stack.Pop();
+                Console.Write(prompt);
+                string? input = Console.ReadLine();
+
+                runner.Stack.Add(input ?? "");
+            })
+    ];
 
     // cant use the actual Stack class here because we need to modify the elements in the middle for assignment statement
     public List<object> Stack { get; } = [];

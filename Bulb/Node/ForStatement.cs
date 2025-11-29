@@ -60,7 +60,10 @@ public class ForStatement(
                 {
                     Scope.Run(runner);
                 }
-                catch (ContinueException) { }
+                catch (ContinueException)
+                {
+                    runner.EndScope();
+                }
 
                 if (UpdateExpression is not null)
                 {

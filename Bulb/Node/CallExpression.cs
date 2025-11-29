@@ -26,7 +26,6 @@ public class CallExpression(Token identifierToken, List<Expression> arguments) :
                 IdentifierToken.LineNumber);
         }
 
-        // no need to verify the validity of ReturnTypeToken here because the function declaration should already have verified it.
         DataType = runner.GetDataType(existingFunction.ReturnTypeToken.Value) ??
                    throw new InvalidSyntaxException("Invalid return type", existingFunction.ReturnTypeToken.LineNumber);
 
@@ -39,38 +38,45 @@ public class CallExpression(Token identifierToken, List<Expression> arguments) :
                     existingFunction.Parameters[i].typeToken.LineNumber)));
         }
 
-        bool returned = false;
-        try
+        if (existingFunction is BuiltInFunctionStatement builtInFunction)
         {
-            existingFunction.Body.Run(runner);
+            builtInFunction.Run(runner);
         }
-        catch (ReturnException)
+        else
         {
-            returned = true;
+            bool returned = false;
+            try
+            {
+                existingFunction.Body.Run(runner);
+            }
+            catch (ReturnException)
+            {
+                returned = true;
+            }
+
+            if (!returned && DataType.Name != "void")
+            {
+                throw new InvalidSyntaxException(
+                    $"`{existingFunction.IdentifierToken.Value}` function is missing a return statement.",
+                    existingFunction.IdentifierToken.LineNumber);
+            }
+
+            object? returnValue = null;
+
+            if (DataType.Name != "void")
+            {
+                returnValue = runner.Stack.Pop();
+            }
+
+            for (int i = 0; i < Arguments.Count; i++)
+            {
+                runner.Variables.Pop();
+                runner.Stack.Pop(); // pop the arguments
+            }
+
+            runner.Stack.Add(returnValue ??
+                             0); // if no return value, just push some random value there because ExpressionStatement will have something to pop out
         }
-
-        if (!returned && DataType.Name != "void")
-        {
-            throw new InvalidSyntaxException(
-                $"`{existingFunction.IdentifierToken.Value}` function is missing a return statement.",
-                existingFunction.IdentifierToken.LineNumber);
-        }
-
-        object? returnValue = null;
-
-        if (DataType.Name != "void")
-        {
-            returnValue = runner.Stack.Pop();
-        }
-
-        for (int i = 0; i < Arguments.Count; i++)
-        {
-            runner.Variables.Pop();
-            runner.Stack.Pop(); // pop the arguments
-        }
-
-        runner.Stack.Add(returnValue ??
-                         0); // if no return value, just push some random value there because ExpressionStatement will have something to pop out
     }
 
     public override string ToString(string indent)

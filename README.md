@@ -123,6 +123,53 @@ Comments are also supported, but multiline comments are not.
 print x;
 ```
 
+### Methods
+
+Bulb provides several built-in helper methods on core data types to make common operations easier.
+
+#### `number` methods
+
+* **`toString(): string`**
+  Converts the number to its string representation.
+* **`toFixed(precision: number): string`**
+  Returns a string version of the number rounded to the given number of decimal places.
+
+#### `string` methods
+
+* **`length`** → `number`
+  The number of characters in the string.
+* **`isNumber(): bool`**
+  Returns `true` if the string can be safely parsed as a number.
+* **`toNumber(): number`**
+  Returns a number typed value for the string, will throw if the string contains invalid character(s).
+* **`toUpper(): string`**
+  Returns the string in uppercase.
+* **`toLower(): string`**
+  Returns the string in lowercase.
+* **`charAt(index: number): string`**
+  Returns the character at the given index.
+
+### Built-in Functions
+
+Bulb also includes a small set of built-in functions to support interactive programs.
+
+```js
+let message = prompt();
+print "Your message is '" + message + "'";
+
+message = prompt("Enter another message: ");
+print "Your second message is '" + message + "'";
+```
+
+**Output**
+
+```
+hello
+Your message is 'hello'
+Enter another message: world
+Your second message is 'world'
+```
+
 ## Examples
 
 ### Fibonacci Calculator
@@ -140,4 +187,94 @@ function fib(n: number): number {
 for (let i = 0; i < 10; i++) {
   print fib(i);
 }
+```
+
+Output:
+```
+0
+1
+1
+2
+3
+5
+8
+13
+21
+34
+```
+
+### Simple Calculator Program
+```ts
+while (true) {
+	let operator = prompt("Enter an operator (+, -, *, /, or 'quit' to quit): ");
+
+	if (operator.toLower() == "quit") {
+		print "Thank you for using the calculator :)";
+		return;
+	}
+
+	let num1Str = prompt("Enter the first number: ");
+
+	if (!num1Str.isNumber()) {
+		print num1Str + " is not a valid number";
+		continue;
+	}
+
+	let num2Str = prompt("Enter the second number: ");
+
+	if (!num2Str.isNumber()) {
+		print num2Str + " is not a valid number";
+		continue;
+	}
+
+	let num1 = num1Str.toNumber();
+	let num2 = num2Str.toNumber();
+
+	let answer = 0;
+	if (operator == "+") {
+		answer = num1 + num2;
+	} else if (operator == "-") {
+		answer = num1 - num2;
+	} else if (operator == "*") {
+		answer = num1 * num2;
+	} else if (operator == "/") {
+		if (num2 == 0) {
+			print "Cannot divide by 0";
+			continue;
+		}
+
+		answer = num1 / num2;
+	} else {
+		print operator + " is not a valid operator";
+		continue;
+	}
+
+	print "The result is: " + answer;
+}
+```
+
+Output: 
+```
+Enter an operator (+, -, *, /, or 'quit' to quit): +
+Enter the first number: 1
+Enter the second number: 5
+The result is: 6
+Enter an operator (+, -, *, /, or 'quit' to quit): -
+Enter the first number: -2
+Enter the second number: 3
+The result is: -5
+Enter an operator (+, -, *, /, or 'quit' to quit): *
+Enter the first number: 5
+Enter the second number: 1.5
+The result is: 7.5
+Enter an operator (+, -, *, /, or 'quit' to quit): /
+Enter the first number: 2
+Enter the second number: 0
+Cannot divide by 0
+Enter an operator (+, -, *, /, or 'quit' to quit): /
+Enter the first number: 5
+Enter the second number: 2
+The result is: 2.5
+Enter an operator (+, -, *, /, or 'quit' to quit): quit
+Thank you for using the calculator :)
 ```

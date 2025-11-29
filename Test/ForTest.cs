@@ -257,4 +257,46 @@ public class ForTest
         Assert.Equal("Variable `i` already exists.", ex.Message);
         Assert.Equal(3, ex.LineNumber);
     }
+
+    [Fact(DisplayName = "Variable Declaration in For With Continue")]
+    public void Variable_Declaration_In_While_With_Continue()
+    {
+        string output = Utils.RunCode("""
+                                      for (let i = 0; i < 3; i++)
+                                      {
+                                          let y = 0;
+                                          
+                                          if (i == 1)
+                                          {
+                                              continue;
+                                          }
+                                      }
+
+                                      let y = 10;
+                                      print y;
+                                      """);
+
+        Assert.Equal("10\n", output);
+    }
+
+    [Fact(DisplayName = "Variable Redeclaration After For Break")]
+    public void Variable_Redeclaration_After_For_Break()
+    {
+        string output = Utils.RunCode("""
+                                      for (let i = 0; i < 3; i++)
+                                      {
+                                          let y = 0;
+                                          
+                                          if (i == 1)
+                                          {
+                                            break;
+                                          }
+                                      }
+
+                                      let y = 10;
+                                      print y;
+                                      """);
+
+        Assert.Equal("10\n", output);
+    }
 }
