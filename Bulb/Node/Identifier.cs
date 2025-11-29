@@ -1,4 +1,4 @@
-using Bulb.Enums;
+using Bulb.DataType;
 using Bulb.Exceptions;
 
 namespace Bulb.Node;
@@ -7,7 +7,7 @@ public class Identifier(Token identifierToken) : Expression
 {
     private Token IdentifierToken { get; } = identifierToken;
 
-    public override DataType DataType { get; protected set; }
+    public override BaseDataType? DataType { get; protected set; }
 
     public override void Run(Runner runner)
     {

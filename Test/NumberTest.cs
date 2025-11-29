@@ -17,7 +17,15 @@ public class NumberTest
     {
         InvalidSyntaxException ex = Assert.Throws<InvalidSyntaxException>(() => Utils.RunCode("print 1.5.3;"));
 
-        Assert.Equal("Invalid symbol encountered. `.`", ex.Message);
+        Assert.Equal("Expected Identifier but found Number", ex.Message);
         Assert.Equal(1, ex.LineNumber);
+    }
+
+    [Fact(DisplayName = "Negative Number")]
+    public void Negative_Numbers()
+    {
+        string output = Utils.RunCode("print -1.5;");
+
+        Assert.Equal("-1.5\n", output);
     }
 }

@@ -16,6 +16,12 @@ public class VariableDeclarationStatement(Token identifier, Expression value) : 
 
         Value.Run(runner);
 
+        if (Value.DataType is null)
+        {
+            throw new InvalidSyntaxException("Unexpected null data type in variable declaration statement.",
+                Identifier.LineNumber);
+        }
+
         if (Value.DataType.Name == "void")
         {
             throw new InvalidSyntaxException("Unable to declare a variable with `void` type", Identifier.LineNumber);

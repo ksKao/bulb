@@ -1,5 +1,5 @@
-using Bulb.Enums;
+using Bulb.DataType;
 
 namespace Bulb;
 
-public record Variable(string Name, int StackLocation, DataType DataType);
+public record Variable(string Name, int StackLocation, BaseDataType DataType);

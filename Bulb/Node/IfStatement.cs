@@ -1,6 +1,6 @@
 using System.Text;
 
-using Bulb.Enums;
+using Bulb.DataType;
 using Bulb.Exceptions;
 
 namespace Bulb.Node;
@@ -23,7 +23,7 @@ public class IfStatement(
     {
         Condition.Run(runner);
 
-        if (Condition.DataType != DataType.Boolean)
+        if (Condition.DataType is null || Condition.DataType != BaseDataType.Boolean)
         {
             throw new InvalidSyntaxException($"Unable to perform `if` on a {Condition.DataType}", IfToken.LineNumber);
         }

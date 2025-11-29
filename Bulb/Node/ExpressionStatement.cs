@@ -16,7 +16,7 @@ public class ExpressionStatement(Expression expression) : Node
     {
         return $"""
                 {indent} Expression Statement:
-                {Expression.ToString(indent + "\t")}";"
+                {Expression.ToString(indent + "\t")}
                 """;
     }
 }

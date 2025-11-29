@@ -41,5 +41,6 @@ public enum TokenType
     Comma,
     Return,
     Void,
+    Dot,
     Eof
 }

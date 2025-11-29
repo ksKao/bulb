@@ -1,3 +1,4 @@
+using Bulb.DataType;
 using Bulb.Enums;
 using Bulb.Exceptions;
 
@@ -14,12 +15,14 @@ public class BinaryExpression(Token operatorToken, Expression left, Expression r
     private bool IsMathOperator =>
         OperatorToken.Type is TokenType.Plus or TokenType.Minus or TokenType.Multiply or TokenType.Divide;
 
-    private bool IsString => Left.DataType == DataType.String || Right.DataType == DataType.String;
+    private bool IsString =>
+        (Left.DataType is not null && Left.DataType == BaseDataType.String) ||
+        (Right.DataType is not null && Right.DataType == BaseDataType.String);
 
     private bool IsComparisonOperator => OperatorToken.Type is TokenType.DoubleEqual or TokenType.NotEqual
         or TokenType.GreaterThan or TokenType.GreaterThanOrEqual or TokenType.LessThan or TokenType.LessThanOrEqual;
 
-    public override DataType DataType { get; protected set; }
+    public override BaseDataType? DataType { get; protected set; }
 
     public override void Run(Runner runner)
     {
@@ -33,19 +36,25 @@ public class BinaryExpression(Token operatorToken, Expression left, Expression r
             string? rightValue = runner.Stack.Pop().ToString();
             string? leftValue = runner.Stack.Pop().ToString();
 
-            DataType = DataType.String;
+            DataType = BaseDataType.String;
+
+            if (Left.DataType is null || Right.DataType is null)
+            {
+                throw new InvalidSyntaxException("Unexpected left/right null value in binary expression",
+                    OperatorToken.LineNumber);
+            }
 
             if (rightValue is null || leftValue is null)
             {
                 throw new InvalidSyntaxException("Unexpected string null value", OperatorToken.LineNumber);
             }
 
-            if (Left.DataType == DataType.Boolean)
+            if (Left.DataType == BaseDataType.Boolean)
             {
                 leftValue = leftValue.ToLower();
             }
 
-            if (Right.DataType == DataType.Boolean)
+            if (Right.DataType == BaseDataType.Boolean)
             {
                 rightValue = rightValue.ToLower();
             }
@@ -57,7 +66,7 @@ public class BinaryExpression(Token operatorToken, Expression left, Expression r
             double rightValue = (double)runner.Stack.Pop();
             double leftValue = (double)runner.Stack.Pop();
 
-            DataType = DataType.Number;
+            DataType = BaseDataType.Number;
 
             switch (OperatorToken.Type)
             {
@@ -84,7 +93,7 @@ public class BinaryExpression(Token operatorToken, Expression left, Expression r
             bool rightValue = (bool)runner.Stack.Pop();
             bool leftValue = (bool)runner.Stack.Pop();
 
-            DataType = DataType.Boolean;
+            DataType = BaseDataType.Boolean;
 
             switch (OperatorToken.Type)
             {
@@ -102,7 +111,7 @@ public class BinaryExpression(Token operatorToken, Expression left, Expression r
         }
         else if (IsComparisonOperator)
         {
-            DataType = DataType.Boolean;
+            DataType = BaseDataType.Boolean;
 
             if (OperatorToken.Type is TokenType.DoubleEqual or TokenType.NotEqual)
             {
@@ -171,6 +180,12 @@ public class BinaryExpression(Token operatorToken, Expression left, Expression r
 
     private void ValidateType()
     {
+        if (Left.DataType is null || Right.DataType is null)
+        {
+            throw new InvalidSyntaxException("Unexpected left/right null value in binary expression",
+                OperatorToken.LineNumber);
+        }
+
         if (Left.DataType != Right.DataType && !IsString)
         {
             throw new InvalidSyntaxException($"Unable to `{OperatorToken.Value}` {Left.DataType} and {Right.DataType}",
@@ -184,13 +199,13 @@ public class BinaryExpression(Token operatorToken, Expression left, Expression r
         }
 
         // from here on assume and left and right is the same, so we only check for the left data type
-        if (Left.DataType == DataType.Number && !IsMathOperator && !IsComparisonOperator && !IsString)
+        if (Left.DataType == BaseDataType.Number && !IsMathOperator && !IsComparisonOperator && !IsString)
         {
             throw new InvalidSyntaxException($"Unable to `{OperatorToken.Value}` {Left.DataType} and {Right.DataType}",
                 OperatorToken.LineNumber);
         }
 
-        if (Left.DataType == DataType.Boolean && !IsBooleanOperator && !IsComparisonOperator && !IsString)
+        if (Left.DataType == BaseDataType.Boolean && !IsBooleanOperator && !IsComparisonOperator && !IsString)
         {
             throw new InvalidSyntaxException($"Unable to `{OperatorToken.Value}` {Left.DataType} and {Right.DataType}",
                 OperatorToken.LineNumber);

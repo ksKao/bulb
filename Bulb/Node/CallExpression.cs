@@ -1,5 +1,6 @@
 using System.Text;
 
+using Bulb.DataType;
 using Bulb.Exceptions;
 
 namespace Bulb.Node;
@@ -9,30 +10,33 @@ public class CallExpression(Token identifierToken, List<Expression> arguments) :
     private Token IdentifierToken { get; } = identifierToken;
     private List<Expression> Arguments { get; } = arguments;
 
-    public override DataType DataType { get; protected set; }
+    public override BaseDataType? DataType { get; protected set; }
 
     public override void Run(Runner runner)
     {
         Arguments.ForEach(a => a.Run(runner));
 
         FunctionDeclarationStatement? existingFunction = runner.Functions.FirstOrDefault(f =>
-            f.IsSameSignature(IdentifierToken.Value, Arguments.Select(a => a.DataType.ToString()).ToList()));
+            f.IsSameSignature(IdentifierToken.Value, Arguments.Select(a => a.DataType?.ToString() ?? "null").ToList()));
 
         if (existingFunction is null)
         {
             throw new InvalidSyntaxException(
-                $"A function named `{IdentifierToken.Value}` that takes in {(Arguments.Count > 0 ? string.Join(", ", Arguments.Select(a => a.DataType.ToString())) : "0 arguments")} does not exist.",
+                $"A function named `{IdentifierToken.Value}` that takes in {(Arguments.Count > 0 ? string.Join(", ", Arguments.Select(a => a.DataType?.ToString())) : "0 arguments")} does not exist.",
                 IdentifierToken.LineNumber);
         }
 
         // no need to verify the validity of ReturnTypeToken here because the function declaration should already have verified it.
-        DataType = new DataType(existingFunction.ReturnTypeToken.Value);
+        DataType = runner.GetDataType(existingFunction.ReturnTypeToken.Value) ??
+                   throw new InvalidSyntaxException("Invalid return type", existingFunction.ReturnTypeToken.LineNumber);
 
         for (int i = 0; i < Arguments.Count; i++)
         {
             runner.Variables.Add(new Variable(existingFunction.Parameters[i].nameToken.Value,
                 runner.Stack.Count + i - Arguments.Count,
-                new DataType(existingFunction.Parameters[i].typeToken.Value)));
+                runner.GetDataType(existingFunction.Parameters[i].typeToken.Value) ??
+                throw new InvalidSyntaxException("Invalid argument type",
+                    existingFunction.Parameters[i].typeToken.LineNumber)));
         }
 
         bool returned = false;

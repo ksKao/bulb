@@ -1,8 +1,8 @@
-using Bulb.Enums;
+using Bulb.DataType;
 
 namespace Bulb.Node;
 
 public abstract class Expression : Node
 {
-    public abstract DataType DataType { get; protected set; }
+    public abstract BaseDataType? DataType { get; protected set; }
 }

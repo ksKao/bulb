@@ -1,3 +1,4 @@
+using Bulb.DataType;
 using Bulb.Exceptions;
 
 namespace Bulb.Node;
@@ -7,7 +8,7 @@ public class AssignmentExpression(Token identifierToken, Expression value) : Exp
     private Token Identifier { get; } = identifierToken;
     private Expression Value { get; } = value;
 
-    public override DataType DataType { get; protected set; }
+    public override BaseDataType? DataType { get; protected set; }
 
 
     public override void Run(Runner runner)
@@ -21,7 +22,7 @@ public class AssignmentExpression(Token identifierToken, Expression value) : Exp
 
         DataType = Value.DataType;
 
-        if (Value.DataType != variable.DataType || Value.DataType.Name == "void")
+        if (Value.DataType is null || Value.DataType != variable.DataType || Value.DataType.Name == "void")
         {
             throw new InvalidSyntaxException($"Unable to assign {Value.DataType} to {variable.DataType}.",
                 Identifier.LineNumber);

@@ -1,5 +1,6 @@
 using System.Text;
 
+using Bulb.DataType;
 using Bulb.Enums;
 using Bulb.Exceptions;
 
@@ -18,8 +19,9 @@ public class FunctionDeclarationStatement(
 
     public override void Run(Runner runner)
     {
-        if (ReturnTypeToken.Value != DataType.String.Name && ReturnTypeToken.Value != DataType.Boolean.Name &&
-            ReturnTypeToken.Value != DataType.Number.Name && ReturnTypeToken.Type != TokenType.Void)
+        if (ReturnTypeToken.Value != BaseDataType.String.Name &&
+            ReturnTypeToken.Value != BaseDataType.Boolean.Name &&
+            ReturnTypeToken.Value != BaseDataType.Number.Name && ReturnTypeToken.Type != TokenType.Void)
         {
             throw new InvalidSyntaxException($"`{ReturnTypeToken.Value}` is not a valid return type.",
                 ReturnTypeToken.LineNumber);
@@ -92,7 +94,7 @@ public class FunctionDeclarationStatement(
     }
 
     // not using operator overloading here for clarity’s sake
-    public bool IsSameSignature(FunctionDeclarationStatement other)
+    private bool IsSameSignature(FunctionDeclarationStatement other)
     {
         return IsSameSignature(other.IdentifierToken.Value, other.Parameters.Select(p => p.typeToken.Value).ToList());
     }

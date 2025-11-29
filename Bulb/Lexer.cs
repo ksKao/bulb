@@ -84,7 +84,7 @@ public class Lexer
         string value = "";
 
         bool decimalEncountered = false;
-        while (char.IsDigit(CurrentChar) || (!decimalEncountered && CurrentChar == '.'))
+        while (char.IsDigit(CurrentChar) || (!decimalEncountered && CurrentChar == '.' && char.IsDigit(NextChar)))
         {
             if (CurrentChar == '.')
             {
@@ -283,6 +283,9 @@ public class Lexer
                 break;
             case ',':
                 token = new Token(TokenType.Comma, ",", _lineNumber);
+                break;
+            case '.':
+                token = new Token(TokenType.Dot, ".", _lineNumber);
                 break;
             default:
                 throw new InvalidSyntaxException($"Invalid symbol encountered. `{CurrentChar}`", _lineNumber);

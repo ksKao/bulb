@@ -12,6 +12,16 @@ public class MathTest
         Assert.Equal("8\n", output);
     }
 
+    [Fact(DisplayName = "Add Negative Number")]
+    public void Add_Negative_Number()
+    {
+        string output = Utils.RunCode("""
+                                        print 5 + -3;
+                                      """);
+
+        Assert.Equal("2\n", output);
+    }
+
     [Fact(DisplayName = "Subtract Two Numbers")]
     public void Subtract_Two_Numbers()
     {
@@ -20,6 +30,16 @@ public class MathTest
                                       """);
 
         Assert.Equal("2\n", output);
+    }
+
+    [Fact(DisplayName = "Subtract Negative Number")]
+    public void Subtract_Negative_Number()
+    {
+        string output = Utils.RunCode("""
+                                        print 5 - -3;
+                                      """);
+
+        Assert.Equal("8\n", output);
     }
 
     [Fact(DisplayName = "Subtract Two Numbers With Negative")]

@@ -47,6 +47,11 @@ public class ReturnStatement(Token returnToken, Expression? returnValue) : Node
 
             ReturnValue.Run(runner);
 
+            if (ReturnValue is null)
+            {
+                throw new InvalidSyntaxException("Unexpected null type in return statement.", ReturnToken.LineNumber);
+            }
+
             if (ReturnValue.DataType.Name != functionScopeContext.ReturnType)
             {
                 throw new InvalidSyntaxException(

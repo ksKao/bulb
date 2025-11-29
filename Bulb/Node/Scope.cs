@@ -8,7 +8,7 @@ public class Scope : Node
 
     // only true for interruptable scopes like while, for, functions, and etc...
     public bool IsStoppable { get; set; }
-    public string? ReturnType { get; set; } = null;
+    public string? ReturnType { get; set; }
 
     public override void Run(Runner runner)
     {

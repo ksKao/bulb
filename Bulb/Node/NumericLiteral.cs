@@ -1,4 +1,4 @@
-using Bulb.Enums;
+using Bulb.DataType;
 
 namespace Bulb.Node;
 
@@ -6,7 +6,7 @@ public class NumericLiteral(double value) : Expression
 {
     private double Value { get; } = value;
 
-    public override DataType DataType { get; protected set; } = DataType.Number;
+    public override BaseDataType? DataType { get; protected set; } = BaseDataType.Number;
 
     public override void Run(Runner runner)
     {

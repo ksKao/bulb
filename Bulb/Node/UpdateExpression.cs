@@ -1,3 +1,4 @@
+using Bulb.DataType;
 using Bulb.Enums;
 using Bulb.Exceptions;
 
@@ -9,7 +10,7 @@ public class UpdateExpression(Token identifierToken, Token operatorToken, bool i
     private Token OperatorToken { get; } = operatorToken;
     private bool IsPrefix { get; } = isPrefix;
 
-    public override DataType DataType { get; protected set; } = DataType.Number;
+    public override BaseDataType? DataType { get; protected set; } = BaseDataType.Number;
 
     public override void Run(Runner runner)
     {
@@ -19,7 +20,7 @@ public class UpdateExpression(Token identifierToken, Token operatorToken, bool i
                 IdentifierToken.LineNumber);
         }
 
-        if (variable.DataType != DataType.Number)
+        if (variable.DataType != BaseDataType.Number)
         {
             throw new InvalidSyntaxException($"Unable to perform `{OperatorToken.Value}` on a {variable.DataType}",
                 IdentifierToken.LineNumber);

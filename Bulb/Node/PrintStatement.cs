@@ -1,3 +1,4 @@
+using Bulb.DataType;
 using Bulb.Exceptions;
 
 namespace Bulb.Node;
@@ -13,12 +14,17 @@ public class PrintStatement(Token printToken, Expression value) : Node
 
         object value = runner.Stack.Pop();
 
+        if (Value.DataType is null)
+        {
+            throw new InvalidSyntaxException("Unexpected null data type in print statement.", PrintToken.LineNumber);
+        }
+
         if (Value.DataType.Name == "void")
         {
             throw new InvalidSyntaxException("Unable to print `void`", PrintToken.LineNumber);
         }
 
-        if (Value.DataType == DataType.Boolean)
+        if (Value.DataType == BaseDataType.Boolean)
         {
             Console.WriteLine(((bool)value).ToString().ToLower());
         }

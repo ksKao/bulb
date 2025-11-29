@@ -31,12 +31,13 @@ public class Parser
     {
         if (_tokens.Length == 0)
         {
-            throw new Exception("No tokens found.");
+            throw new InvalidSyntaxException("No tokens found.", CurrentToken.LineNumber);
         }
 
         if (expectedType is not null && CurrentToken.Type != expectedType)
         {
-            throw new Exception($"Expected {expectedType} but found {CurrentToken.Type}");
+            throw new InvalidSyntaxException($"Expected {expectedType} but found {CurrentToken.Type}",
+                CurrentToken.LineNumber);
         }
 
         // need to cache first before increment otherwise the returned token will not be accurate
@@ -328,15 +329,11 @@ public class Parser
 
     private Expression ParseUnaryExpression()
     {
-        while (CurrentToken.Type is TokenType.Not)
+        while (CurrentToken.Type is TokenType.Not or TokenType.Minus)
         {
-            switch (CurrentToken.Type)
-            {
-                case TokenType.Not:
-                    Token operatorToken = Eat();
-                    UnaryExpression unaryExpression = new(operatorToken, ParseUnaryExpression());
-                    return unaryExpression;
-            }
+            Token operatorToken = Eat();
+            UnaryExpression unaryExpression = new(operatorToken, ParseUnaryExpression());
+            return unaryExpression;
         }
 
         return ParseUpdateExpression();
@@ -365,7 +362,7 @@ public class Parser
     {
         if (CurrentToken.Type != TokenType.Identifier || NextToken?.Type != TokenType.OpenParenthesis)
         {
-            return ParsePrimaryExpression();
+            return ParsePropertyAccessExpression();
         }
 
         Token identifierToken = Eat(TokenType.Identifier);
@@ -386,6 +383,42 @@ public class Parser
         Eat(TokenType.CloseParenthesis);
 
         return new CallExpression(identifierToken, arguments);
+    }
+
+    private Expression ParsePropertyAccessExpression()
+    {
+        Expression left = ParsePrimaryExpression();
+
+        while (CurrentToken.Type is TokenType.Dot)
+        {
+            Eat(TokenType.Dot);
+
+            Token propertyIdentifierToken = Eat(TokenType.Identifier);
+            List<Expression>? arguments = null;
+
+            if (CurrentToken.Type is TokenType.OpenParenthesis)
+            {
+                arguments = [];
+
+                Eat(TokenType.OpenParenthesis);
+
+                while (CurrentToken.Type != TokenType.CloseParenthesis)
+                {
+                    arguments.Add(ParseExpression());
+
+                    if (CurrentToken.Type != TokenType.CloseParenthesis)
+                    {
+                        Eat(TokenType.Comma);
+                    }
+                }
+
+                Eat(TokenType.CloseParenthesis);
+            }
+
+            left = new PropertyAccessExpression(left, propertyIdentifierToken, arguments);
+        }
+
+        return left;
     }
 
     private Expression ParsePrimaryExpression()

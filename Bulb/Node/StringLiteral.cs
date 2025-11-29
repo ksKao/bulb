@@ -1,11 +1,11 @@
-using Bulb.Enums;
+using Bulb.DataType;
 
 namespace Bulb.Node;
 
 public class StringLiteral(string value) : Expression
 {
     private string Value { get; } = value;
-    public override DataType DataType { get; protected set; } = DataType.String;
+    public override BaseDataType? DataType { get; protected set; } = BaseDataType.String;
 
     public override void Run(Runner runner)
     {

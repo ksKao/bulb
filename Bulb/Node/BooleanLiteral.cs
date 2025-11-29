@@ -1,4 +1,4 @@
-using Bulb.Enums;
+using Bulb.DataType;
 
 namespace Bulb.Node;
 
@@ -6,7 +6,7 @@ public class BooleanLiteral(bool value) : Expression
 {
     private bool Value { get; } = value;
 
-    public override DataType DataType { get; protected set; } = DataType.Boolean;
+    public override BaseDataType? DataType { get; protected set; } = BaseDataType.Boolean;
 
     public override void Run(Runner runner)
     {

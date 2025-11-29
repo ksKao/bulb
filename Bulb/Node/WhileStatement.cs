@@ -1,4 +1,4 @@
-using Bulb.Enums;
+using Bulb.DataType;
 using Bulb.Exceptions;
 
 namespace Bulb.Node;
@@ -15,7 +15,12 @@ public class WhileStatement(Token whileToken, Expression condition, Scope scope)
 
         Condition.Run(runner);
 
-        if (Condition.DataType != DataType.Boolean)
+        if (Condition.DataType is null)
+        {
+            throw new InvalidSyntaxException("Unexpected null data type in while condition", WhileToken.LineNumber);
+        }
+
+        if (Condition.DataType != BaseDataType.Boolean)
         {
             throw new InvalidSyntaxException($"While loop condition cannot be of type `{Condition.DataType}`.",
                 WhileToken.LineNumber);

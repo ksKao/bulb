@@ -1,9 +1,13 @@
+using Bulb.DataType;
 using Bulb.Node;
 
 namespace Bulb;
 
 public class Runner
 {
+    private readonly List<BaseDataType> DataTypes =
+        [BaseDataType.Number, BaseDataType.Boolean, BaseDataType.String, BaseDataType.Void];
+
     public List<Variable> Variables { get; } = [];
     public List<FunctionDeclarationStatement> Functions { get; } = [];
 
@@ -40,6 +44,11 @@ public class Runner
         variable = found!;
 
         return found is not null;
+    }
+
+    public BaseDataType? GetDataType(string name)
+    {
+        return DataTypes.FirstOrDefault(d => d.Name == name);
     }
 
     public void BeginScope(bool isStoppable, string? returnType)

@@ -1,3 +1,4 @@
+using Bulb.DataType;
 using Bulb.Exceptions;
 
 namespace Bulb.Node;
@@ -35,7 +36,7 @@ public class ForStatement(
                 {
                     ConditionExpression.Run(runner);
 
-                    if (ConditionExpression.DataType != DataType.Boolean)
+                    if (ConditionExpression.DataType is null || ConditionExpression.DataType != BaseDataType.Boolean)
                     {
                         throw new InvalidSyntaxException(
                             $"Unexpected data type in for loop condition `{ConditionExpression.DataType}`",
